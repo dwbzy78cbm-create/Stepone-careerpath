@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>一步 StepOne · AI 求职成长陪伴</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #F7F5FF;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  /* 页面切换 */
+  .page { display: none; flex-direction: column; height: 100vh; }
+  .page.active { display: flex; }
+
+  /* 首页 */
+  #home-page {
+    background: linear-gradient(180deg, #7850EE 0%, #9B7CF4 40%, #F7F5FF 40%);
+  }
+  .home-header {
+    padding: 50px 24px 24px;
+    color: #fff;
+    text-align: center;
+  }
+  .home-emoji { font-size: 48px; margin-bottom: 8px; }
+  .home-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .home-subtitle { font-size: 13px; opacity: 0.85; }
+
+  /* 快速入口 */
+  .quick-entries {
+    margin: 0 20px 12px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .quick-entries h3 {
+    font-size: 14px;
+    color: #8E8EA0;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .quick-card {
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: 1.5px solid #E8E4F0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .quick-card:active, .quick-card:hover {
+    border-color: #7850EE;
+    background: #F5F0FF;
+  }
+  .quick-card .qc-emoji { font-size: 26px; margin-bottom: 4px; }
+  .quick-card .qc-title { font-size: 13px; font-weight: 600; color: #2D2D3A; margin-bottom: 2px; }
+  .quick-card .qc-desc { font-size: 11px; color: #A0A0B0; }
+
+  /* 阶段卡片 */
+  .stage-card {
+    margin: 0 20px 12px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  }
+  .stage-card .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .stage-card .stage-emoji { font-size: 32px; }
+  .stage-card .stage-name { font-size: 16px; font-weight: 700; color: #1A1A2E; }
+  .stage-card .stage-desc { font-size: 12px; color: #8E8EA0; line-height: 1.5; }
+
+  /* 底部导航 */
+  .bottom-nav {
+    display: flex;
+    background: #fff;
+    border-top: 1px solid #E8E4F0;
+    padding: 6px 0;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    flex-shrink: 0;
+  }
+  .nav-item {
+    flex: 1;
+    text-align: center;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+  .nav-item .nav-emoji { font-size: 20px; display: block; margin-bottom: 1px; }
+  .nav-item .nav-label { font-size: 10px; color: #A0A0B0; }
+  .nav-item.active .nav-label { color: #7850EE; font-weight: 600; }
+
+  /* 对话页 */
+  #chat-page { background: #F7F5FF; }
+  .chat-header-bar {
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #E8E4F0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1A1A2E;
+  }
+
+  .narrative-entry-bar {
+    margin: 8px 14px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #EEF0FF 0%, #F5F0FF 100%);
+    border: 1.5px solid #D5CCF0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .narrative-entry-bar:active { background: linear-gradient(135deg, #DEE5FF, #EDE0FF); }
+  .narrative-icon { font-size: 26px; }
+  .narrative-text { flex: 1; }
+  .narrative-title { display: block; font-size: 13px; font-weight: 600; color: #5A3FCF; }
+  .narrative-desc { display: block; font-size: 11px; color: #8E8EA0; margin-top: 2px; }
+  .narrative-arrow { font-size: 20px; color: #5A3FCF; font-weight: 700; }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+  }
+  .message-item {
+    display: flex;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .msg-user { justify-content: flex-end; }
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 16px;
+    background: #F0EDF8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .msg-user .msg-avatar { margin-left: 8px; }
+  .msg-bot .msg-avatar { margin-right: 8px; }
+  .msg-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  .bubble-user {
+    background: linear-gradient(135deg, #7850EE, #0084FF);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .bubble-bot {
+    background: #fff;
+    color: #2D2D3A;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .typing-cursor { animation: blink 0.8s infinite; }
+  @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+  .welcome-box {
+    text-align: center;
+    padding: 30px 16px;
+  }
+  .welcome-box .w-emoji { font-size: 40px; margin-bottom: 8px; }
+  .welcome-box .w-title { font-size: 18px; font-weight: 700; color: #1A1A2E; margin-bottom: 6px; }
+  .welcome-box .w-desc { font-size: 12px; color: #8E8EA0; margin-bottom: 20px; }
+  .quick-qs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .quick-qs .qq-tag {
+    padding: 7px 12px;
+    background: #fff;
+    border: 1px solid #E8E4F0;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #7850EE;
+    cursor: pointer;
+  }
+  .quick-qs .qq-tag:active { background: #F5F0FF; }
+
+  .chat-input-area {
+    background: #fff;
+    border-top: 1px solid #E8E4F0;
+    padding: 8px 14px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .input-row input {
+    flex: 1;
+    padding: 9px 14px;
+    background: #F5F5F7;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    outline: none;
+  }
+  .input-row button {
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #7850EE, #0084FF);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .input-row button:disabled { background: #A0A0B0; cursor: not-allowed; }
+  .input-actions {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6px;
+  }
+  .input-actions span {
+    font-size: 11px;
+    color: #A0A0B0;
+    cursor: pointer;
+  }
+
+  /* 里程碑页 */
+  #milestones-page { background: #F7F5FF; }
+  .page-header-bar {
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #E8E4F0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .page-header-bar .back-btn {
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px;
+  }
+  .page-header-bar .ph-title { font-size: 15px; font-weight: 600; color: #1A1A2E; }
+  .page-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+    padding-bottom: 90px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .section-header .sh-title { font-size: 14px; font-weight: 700; color: #1A1A2E; }
+  .section-header .sh-progress { font-size: 12px; color: #7850EE; font-weight: 600; }
+
+  .progress-bar {
+    height: 6px;
+    background: #E8E4F0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .progress-bar .pb-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7850EE, #0084FF);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  .sticky-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sticky-note {
+    border-radius: 2px 14px 2px 14px;
+    box-shadow: 2px 3px 10px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+    padding: 22px 14px 14px;
+  }
+  .sticky-yellow { background: linear-gradient(160deg, #FFF9DB, #FFF3C4); }
+  .sticky-pink   { background: linear-gradient(160deg, #FFF0F3, #FFE4E8); }
+  .sticky-blue   { background: linear-gradient(160deg, #EEF2FF, #DEE5FF); }
+  .sticky-green  { background: linear-gradient(160deg, #F0FFF4, #DCFFE8); }
+  .sticky-purple { background: linear-gradient(160deg, #F8F0FF, #EDE0FF); }
+  .sticky-orange { background: linear-gradient(160deg, #FFF6ED, #FFEAD4); }
+  .sticky-done { opacity: 0.5; filter: grayscale(0.2); }
+  .sticky-pin {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #E8D5B7, #C4956A);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+  .sticky-check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .sticky-check {
+    width: 28px; height: 28px;
+    border-radius: 5px;
+    border: 2.5px solid #C4B5E0;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .sticky-check.checked {
+    background: #7850EE;
+    border-color: #7850EE;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .sticky-text {
+    flex: 1;
+    font-size: 13px;
+    color: #2D2D3A;
+    line-height: 1.5;
+    word-break: break-all;
+  }
+  .strikethrough { text-decoration: line-through; color: #A0A0B0; }
+  .sticky-del-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 16px;
+    color: #C0C0C8;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .add-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 12px 14px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid #E8E4F0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    z-index: 10;
+  }
+  .add-bar input {
+    flex: 1;
+    padding: 10px 16px;
+    background: #F5F5F7;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    outline: none;
+  }
+  .add-bar .add-btn {
+    width: 40px; height: 40px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #7850EE, #0084FF);
+    color: #fff;
+    font-size: 22px;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* 焦虑页 */
+  #anxiety-page { background: #F7F5FF; }
+  .tree-hole-intro {
+    text-align: center;
+    padding: 20px 16px;
+  }
+  .tree-hole-intro .th-emoji { font-size: 40px; margin-bottom: 6px; }
+  .tree-hole-intro .th-title { font-size: 16px; font-weight: 700; color: #1A1A2E; margin-bottom: 4px; }
+  .tree-hole-intro .th-desc { font-size: 12px; color: #8E8EA0; }
+
+  .anxiety-input-area {
+    margin: 0 16px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  .anxiety-input-area textarea {
+    width: 100%;
+    height: 100px;
+    border: 1.5px solid #E8E4F0;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 13px;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+  }
+  .anxiety-input-area button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: linear-gradient(135deg, #7850EE, #0084FF);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .comfort-box {
+    margin: 14px 16px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 14px;
+    border-left: 4px solid #7850EE;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #2D2D3A;
+  }
+
+  /* 叙事重构页 */
+  #narrative-page { background: #F7F5FF; }
+  .narrative-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .narrative-phase {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .narrative-phase h3 {
+    font-size: 15px;
+    color: #7850EE;
+    margin-bottom: 10px;
+  }
+  .narrative-phase .story-item {
+    padding: 10px 12px;
+    border: 1px solid #E8E4F0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .narrative-phase .story-item.selected {
+    border-color: #7850EE;
+    background: #F5F0FF;
+  }
+  .narrative-phase .story-item h4 { font-size: 13px; color: #2D2D3A; margin-bottom: 3px; }
+  .narrative-phase .story-item p { font-size: 11px; color: #8E8EA0; line-height: 1.4; }
+  .star-result {
+    margin-top: 12px;
+    padding: 14px;
+    background: #F7F5FF;
+    border-radius: 10px;
+  }
+  .star-result h4 {
+    font-size: 13px;
+    color: #7850EE;
+    margin-bottom: 8px;
+  }
+  .star-item {
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 6px;
+  }
+  .star-item .star-title { font-size: 12px; font-weight: 600; color: #2D2D3A; }
+  .star-item .star-field { font-size: 11px; color: #8E8EA0; margin-top: 3px; }
+  .star-item .star-field strong { color: #5A3FCF; }
+  .star-skills {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .star-skills .skill-tag {
+    padding: 2px 8px;
+    background: #F5F0FF;
+    color: #7850EE;
+    border-radius: 10px;
+    font-size: 10px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #7850EE, #0084FF);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 20px;
+    color: #8E8EA0;
+    font-size: 12px;
+  }
+  .loading-spinner::before {
+    content: '';
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid #E8E4F0;
+    border-top-color: #7850EE;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .onboarding-notice {
+    margin: 8px 14px;
+    padding: 10px 14px;
+    background: #F5F0FF;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #5A3FCF;
+    text-align: center;
+    cursor: pointer;
+  }
+  .empty-hint {
+    text-align: center;
+    padding: 40px 16px;
+    color: #A0A0B0;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<!-- 首页 -->
+<div id="home-page" class="page active">
+  <div class="home-header">
+    <div class="home-emoji">🚀</div>
+    <div class="home-title" id="homeGreeting">欢迎来到一步</div>
+    <div class="home-subtitle">AI 求职成长陪伴 · 每一步都有方向</div>
+  </div>
+
+  <div class="quick-entries">
+    <h3>🔧 工具箱</h3>
+    <div class="quick-grid">
+      <div class="quick-card" onclick="startFrom('chat')">
+        <div class="qc-emoji">💬</div>
+        <div class="qc-title">AI 对话</div>
+        <div class="qc-desc">个性化求职建议</div>
+      </div>
+      <div class="quick-card" onclick="startFrom('narrative')">
+        <div class="qc-emoji">📖</div>
+        <div class="qc-title">叙事重构</div>
+        <div class="qc-desc">经历→STAR→简历</div>
+      </div>
+      <div class="quick-card" onclick="switchPage('milestones')">
+        <div class="qc-emoji">🏔️</div>
+        <div class="qc-title">里程碑</div>
+        <div class="qc-desc">追踪每一步</div>
+      </div>
+      <div class="quick-card" onclick="switchPage('anxiety')">
+        <div class="qc-emoji">🧘</div>
+        <div class="qc-title">喘口气</div>
+        <div class="qc-desc">缓解求职焦虑</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-card" id="stageInfo" style="display:none;">
+    <div class="stage-header">
+      <span class="stage-emoji" id="stageEmoji">🌱</span>
+      <span class="stage-name" id="stageName">探索期</span>
+    </div>
+    <div class="stage-desc" id="stageDesc">AI 会根据你的情况提供个性化陪伴。</div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home')">
+      <span class="nav-emoji">🏠</span>
+      <span class="nav-label">首页</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('chat')">
+      <span class="nav-emoji">💬</span>
+      <span class="nav-label">对话</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('milestones')">
+      <span class="nav-emoji">🏔️</span>
+      <span class="nav-label">里程碑</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('anxiety')">
+      <span class="nav-emoji">🧘</span>
+      <span class="nav-label">喘口气</span>
+    </div>
+  </div>
+</div>
+
+<!-- 对话页 -->
+<div id="chat-page" class="page">
+  <div class="chat-header-bar">AI 成长陪伴</div>
+
+  <div class="onboarding-notice" id="onboardingNotice" style="display:none;" onclick="doOnboarding()">
+    💡 先完成定位，AI才能更懂你 → 去定位
+  </div>
+
+  <div class="narrative-entry-bar" id="narrativeEntry" style="display:none;" onclick="switchPage('narrative')">
+    <span class="narrative-icon">✨</span>
+    <div class="narrative-text">
+      <span class="narrative-title">你的故事线索已浮现</span>
+      <span class="narrative-desc">AI 已发现你的关键经历，点击进行叙事重构</span>
+    </div>
+    <span class="narrative-arrow">→</span>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="welcome-box" id="welcomeBox">
+      <div class="w-emoji">💬</div>
+      <div class="w-title">把经历扔给我，帮你写成简历</div>
+      <div class="w-desc">告诉我你做过什么项目、实习、比赛，我来帮你整理、拆解、转成 STAR 语言。</div>
+      <div class="quick-qs" id="quickQuestions">
+        <span class="qq-tag" onclick="sendQuick('帮我整理经历，我做过一个电商小程序和一个数据分析比赛')">直接扔经历给我</span>
+        <span class="qq-tag" onclick="sendQuick('我有一段实习经历，帮我拆解成简历语言')">拆解实习经历</span>
+        <span class="qq-tag" onclick="sendQuick('我想投前端开发，帮我看看经历够不够')">看看匹配度</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="input-row">
+      <input type="text" id="msgInput" placeholder="输入你想问的..." onkeydown="if(event.key==='Enter')sendMessage()" />
+      <button id="sendBtn" onclick="sendMessage()">发送</button>
+    </div>
+    <div class="input-actions">
+      <span onclick="clearChat()">清空对话</span>
+      <span id="depthHint">当前深度：建立连接</span>
+    </div>
+  </div>
+</div>
+
+<!-- 里程碑页 -->
+<div id="milestones-page" class="page">
+  <div class="page-header-bar">
+    <span class="back-btn" onclick="switchPage('home')">←</span>
+    <span class="ph-title">🏔️ 里程碑</span>
+  </div>
+  <div class="page-body">
+    <div class="section-header">
+      <span class="sh-title">我的便签</span>
+      <span class="sh-progress" id="msProgress">0/0 已完成</span>
+    </div>
+    <div class="progress-bar">
+      <div class="pb-fill" id="msProgressBar" style="width:0%"></div>
+    </div>
+    <div class="sticky-grid" id="stickyGrid">
+      <div class="empty-hint">还没有里程碑，在下方添加吧 ✍️</div>
+    </div>
+  </div>
+  <div class="add-bar">
+    <input type="text" id="msInput" placeholder="写下你想达成的目标..." onkeydown="if(event.key==='Enter')addMilestone()" />
+    <button class="add-btn" onclick="addMilestone()">+</button>
+  </div>
+</div>
+
+<!-- 焦虑页 -->
+<div id="anxiety-page" class="page">
+  <div class="page-header-bar">
+    <span class="back-btn" onclick="switchPage('home')">←</span>
+    <span class="ph-title">🧘 喘口气</span>
+  </div>
+  <div class="page-body">
+    <div class="tree-hole-intro">
+      <div class="th-emoji">🌳</div>
+      <div class="th-title">树洞时刻</div>
+      <div class="th-desc">把你的焦虑写下来，AI 会给你温暖的回应</div>
+    </div>
+    <div class="anxiety-input-area">
+      <textarea id="anxietyText" placeholder="写下你现在的感受..."></textarea>
+      <button onclick="sendAnxiety()">投入树洞</button>
+    </div>
+    <div id="comfortResult"></div>
+  </div>
+</div>
+
+<!-- 叙事重构页 -->
+<div id="narrative-page" class="page">
+  <div class="page-header-bar">
+    <span class="back-btn" onclick="switchPage('chat')">←</span>
+    <span class="ph-title">📖 叙事重构</span>
+  </div>
+  <div class="narrative-body" id="narrativeBody">
+    <div class="narrative-phase" id="phaseStoryMining">
+      <h3>📖 第一步：故事挖掘</h3>
+      <p style="font-size:12px;color:#8E8EA0;margin-bottom:10px;">AI 将分析你的对话记录，挖掘关键经历线索</p>
+      <button class="btn-primary" id="btnMining" onclick="doStoryMining()">开始挖掘</button>
+      <div id="storyMiningResult"></div>
+    </div>
+    <div class="narrative-phase" id="phaseStar" style="display:none;">
+      <h3>⭐ 第二步：STAR 拆解</h3>
+      <p style="font-size:12px;color:#8E8EA0;margin-bottom:10px;">选择一条线索，AI 将用 STAR 法则帮你拆解</p>
+      <button class="btn-primary" id="btnStar" onclick="doStarDecomposition()">进行 STAR 拆解</button>
+      <div id="starResult"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 全局状态 =====
+const API_BASE = '';
+let userId = null;
+let messages = [];
+let currentDepth = 'depth1';
+let showNarrativeEntry = false;
+let narrativeStories = [];
+let milestones = [];
+const COLORS = ['sticky-yellow','sticky-pink','sticky-blue','sticky-green','sticky-purple','sticky-orange'];
+
+// ===== 初始化 =====
+async function init() {
+  updateGreeting();
+  try {
+    const res = await fetch(`${API_BASE}/api/user/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ openid: 'web_demo_' + (localStorage.getItem('uid') || Date.now()) }),
+    });
+    const data = await res.json();
+    userId = data.id;
+    localStorage.setItem('uid', data.openid);
+
+    if (data.onboarding_completed) {
+      document.getElementById('stageInfo').style.display = 'block';
+      document.getElementById('stageEmoji').textContent = '🌱';
+      document.getElementById('stageName').textContent = data.current_stage || 'S1';
+      document.getElementById('onboardingNotice').style.display = 'none';
+      await loadProfile();
+    } else {
+      document.getElementById('onboardingNotice').style.display = 'block';
+    }
+  } catch (e) {
+    console.error('Init error:', e);
+  }
+}
+
+function updateGreeting() {
+  const hour = new Date().getHours();
+  let g = '早上好';
+  if (hour >= 12 && hour < 18) g = '下午好';
+  else if (hour >= 18) g = '晚上好';
+  document.getElementById('homeGreeting').textContent = g + '，欢迎来到一步';
+}
+
+async function loadProfile() {
+  try {
+    const res = await fetch(`${API_BASE}/api/user/profile/${userId}`);
+    const data = await res.json();
+    document.getElementById('stageInfo').style.display = 'block';
+    document.getElementById('stageEmoji').textContent = data.stage_emoji || '🌱';
+    document.getElementById('stageName').textContent = data.stage_name || '';
+    document.getElementById('stageDesc').textContent = (data.profile || {}).grade_stage || '';
+    await checkNarrativeEntry();
+  } catch (e) { console.error(e); }
+}
+
+// ===== 页面切换 =====
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const pages = { home: 0, chat: 1, milestones: 2, anxiety: 3 };
+  const navs = document.querySelectorAll('.nav-item');
+  if (pages[name] !== undefined) navs[pages[name]].classList.add('active');
+
+  if (name === 'home') {
+    document.getElementById('home-page').classList.add('active');
+  } else if (name === 'chat') {
+    document.getElementById('chat-page').classList.add('active');
+    if (userId) checkNarrativeEntry();
+  } else if (name === 'milestones') {
+    document.getElementById('milestones-page').classList.add('active');
+    loadMilestones();
+  } else if (name === 'anxiety') {
+    document.getElementById('anxiety-page').classList.add('active');
+  } else if (name === 'narrative') {
+    document.getElementById('narrative-page').classList.add('active');
+  }
+}
+
+function startFrom(type) {
+  if (type === 'chat') switchPage('chat');
+  else if (type === 'narrative') switchPage('narrative');
+}
+
+function doOnboarding() {
+  const name = prompt('请告诉我你的昵称：');
+  const major = prompt('你的专业是什么？（如：计算机科学）');
+  const grade = prompt('你目前是？（如：大一、研一）');
+  if (name && major && grade) {
+    document.getElementById('msgInput').value = `你好，我叫${name}，专业是${major}，目前${grade}`;
+    document.getElementById('onboardingNotice').style.display = 'none';
+    sendMessage();
+  }
+}
+
+// ===== 对话功能 =====
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || !userId) return;
+
+  input.value = '';
+  const sendBtn = document.getElementById('sendBtn');
+  sendBtn.disabled = true;
+
+  const welcomeBox = document.getElementById('welcomeBox');
+  if (welcomeBox) welcomeBox.style.display = 'none';
+
+  addMessage('user', text);
+  messages.push({ role: 'user', content: text });
+
+  const botId = 'bot_' + Date.now();
+  addMessage('assistant', '', botId);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/chat/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, message: text, history_limit: 10 }),
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullContent = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const d = JSON.parse(line.slice(6));
+            if (d.done) {
+              if (d.show_narrative) {
+                showNarrativeEntry = true;
+                currentDepth = d.depth || 'depth3';
+                document.getElementById('narrativeEntry').style.display = 'flex';
+                document.getElementById('depthHint').textContent = '当前深度：分析提炼';
+              }
+              if (d.depth) {
+                currentDepth = d.depth;
+                const names = { depth1:'描述经历', depth2:'确认目标', depth3:'拆解经历', depth4:'STAR转译', depth5:'行动建议' };
+                document.getElementById('depthHint').textContent = '当前深度：' + (names[d.depth] || d.depth);
+              }
+              updateBotMsg(botId, fullContent, false);
+            } else if (d.content) {
+              fullContent += d.content;
+              updateBotMsg(botId, fullContent, true);
+            }
+          } catch (e) {}
+        }
+      }
+    }
+  } catch (e) {
+    updateBotMsg(botId, '网络错误，请稍后重试。', false);
+  }
+
+  sendBtn.disabled = false;
+  scrollChatBottom();
+}
+
+function addMessage(role, content, id) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `message-item ${role === 'user' ? 'msg-user' : 'msg-bot'}`;
+  div.id = id || '';
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'user' ? '🧑‍🎓' : '🤖'}</div>
+    <div class="msg-bubble ${role === 'user' ? 'bubble-user' : 'bubble-bot'}">${escapeHtml(content)}${role === 'assistant' ? '<span class="typing-cursor">|</span>' : ''}</div>
+  `;
+  container.appendChild(div);
+  scrollChatBottom();
+}
+
+function updateBotMsg(id, content, streaming) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const bubble = el.querySelector('.msg-bubble');
+  bubble.innerHTML = escapeHtml(content) + (streaming ? '<span class="typing-cursor">|</span>' : '');
+  scrollChatBottom();
+}
+
+function sendQuick(msg) {
+  document.getElementById('msgInput').value = msg;
+  sendMessage();
+}
+
+function clearChat() {
+  if (!confirm('确定清空所有对话？')) return;
+  fetch(`${API_BASE}/api/chat/history/${userId}`, { method: 'DELETE' })
+    .then(() => {
+      document.getElementById('chatMessages').innerHTML = `
+        <div class="welcome-box" id="welcomeBox">
+          <div class="w-emoji">👋</div>
+          <div class="w-title">对话已清空</div>
+          <div class="w-desc">开始新的对话吧！</div>
+        </div>`;
+      document.getElementById('narrativeEntry').style.display = 'none';
+      showNarrativeEntry = false;
+      messages = [];
+    });
+}
+
+function scrollChatBottom() {
+  const el = document.getElementById('chatMessages');
+  el.scrollTop = el.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ===== 深度检测 =====
+async function checkNarrativeEntry() {
+  try {
+    const res = await fetch(`${API_BASE}/api/depth/check/${userId}`);
+    const data = await res.json();
+    if (data.show_narrative) {
+      showNarrativeEntry = true;
+      currentDepth = data.current_depth;
+      document.getElementById('narrativeEntry').style.display = 'flex';
+    }
+  } catch (e) {}
+}
+
+// ===== 里程碑 =====
+async function loadMilestones() {
+  if (!userId) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/milestones/list/${userId}`);
+    const data = await res.json();
+    milestones = (data.milestones || []).map((m, i) => ({ ...m, color: COLORS[i % COLORS.length] }));
+    renderMilestones();
+    document.getElementById('msProgress').textContent = `${data.completed || 0}/${data.total || 0} 已完成`;
+    const pct = data.total > 0 ? (data.completed / data.total * 100) : 0;
+    document.getElementById('msProgressBar').style.width = pct + '%';
+  } catch (e) { console.error(e); }
+}
+
+function renderMilestones() {
+  const grid = document.getElementById('stickyGrid');
+  if (milestones.length === 0) {
+    grid.innerHTML = '<div class="empty-hint">还没有里程碑，在下方添加吧 ✍️</div>';
+    return;
+  }
+  grid.innerHTML = milestones.map(m => `
+    <div class="sticky-note ${m.color} ${m.status === 'completed' ? 'sticky-done' : ''}">
+      <div class="sticky-pin"></div>
+      <div class="sticky-check-row">
+        <div class="sticky-check ${m.status === 'completed' ? 'checked' : ''}" onclick="toggleMs(${m.id},'${m.status}')">${m.status === 'completed' ? '✓' : ''}</div>
+        <span class="sticky-text ${m.status === 'completed' ? 'strikethrough' : ''}">${escapeHtml(m.name)}</span>
+      </div>
+      <span class="sticky-del-btn" onclick="deleteMs(${m.id})">×</span>
+    </div>
+  `).join('');
+}
+
+async function addMilestone() {
+  const input = document.getElementById('msInput');
+  const name = input.value.trim();
+  if (!name || !userId) return;
+  try {
+    await fetch(`${API_BASE}/api/milestones/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, name, verification: '' }),
+    });
+    input.value = '';
+    loadMilestones();
+  } catch (e) { console.error(e); }
+}
+
+async function toggleMs(id, status) {
+  const newStatus = status === 'completed' ? 'pending' : 'completed';
+  try {
+    await fetch(`${API_BASE}/api/milestones/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, milestone_id: id, status: newStatus }),
+    });
+    loadMilestones();
+  } catch (e) { console.error(e); }
+}
+
+async function deleteMs(id) {
+  if (!confirm('确定要删除这个里程碑吗？')) return;
+  try {
+    await fetch(`${API_BASE}/api/milestones/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, milestone_id: id }),
+    });
+    loadMilestones();
+  } catch (e) { console.error(e); }
+}
+
+// ===== 焦虑树洞 =====
+async function sendAnxiety() {
+  const text = document.getElementById('anxietyText').value.trim();
+  if (!text || !userId) return;
+  const resultDiv = document.getElementById('comfortResult');
+  resultDiv.innerHTML = '<div class="loading-spinner">正在倾听你的心事...</div>';
+  try {
+    const res = await fetch(`${API_BASE}/api/anxiety/trigger`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, text }),
+    });
+    const data = await res.json();
+    resultDiv.innerHTML = `<div class="comfort-box">${escapeHtml(data.comfort_message || data.message || '我听到了你的声音。求职路上，有焦虑很正常，你已经很棒了。')}</div>`;
+    document.getElementById('anxietyText').value = '';
+  } catch (e) {
+    resultDiv.innerHTML = '<div class="comfort-box">网络似乎出了点问题，但没关系，深呼吸，你已经很努力了 🌿</div>';
+  }
+}
+
+// ===== 叙事重构 =====
+async function doStoryMining() {
+  const btn = document.getElementById('btnMining');
+  const resultDiv = document.getElementById('storyMiningResult');
+  btn.disabled = true;
+  resultDiv.innerHTML = '<div class="loading-spinner">AI 正在挖掘你的故事线索...</div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/chat/narrative`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, stage: 'story_mining' }),
+    });
+    const data = await res.json();
+    narrativeStories = (data.result && data.result.stories) || [];
+
+    let html = '';
+    if (narrativeStories.length > 0) {
+      narrativeStories.forEach((s, i) => {
+        html += `
+          <div class="story-item" onclick="selectStory(${i})" id="story-${i}">
+            <h4>${escapeHtml(s.title || '未命名')}</h4>
+            <p><strong>主题：</strong>${escapeHtml(s.theme || '')}</p>
+            <p><strong>关键转折：</strong>${escapeHtml(s.key_moment || '')}</p>
+            <p><strong>洞见：</strong>${escapeHtml(s.insight || '')}</p>
+          </div>`;
+      });
+      html += `<p style="font-size:12px;color:#8E8EA0;margin-top:8px;">${escapeHtml(data.result.narrative_arc || '')}</p>`;
+      document.getElementById('phaseStar').style.display = 'block';
+    } else {
+      html = '<p style="font-size:12px;color:#8E8EA0;">暂未发现故事线索，请先和AI多聊聊。</p>';
+    }
+    resultDiv.innerHTML = html;
+  } catch (e) {
+    resultDiv.innerHTML = '<p style="color:red;">请求失败: ' + e.message + '</p>';
+  }
+  btn.disabled = false;
+}
+
+let selectedStoryIdx = -1;
+function selectStory(idx) {
+  selectedStoryIdx = idx;
+  document.querySelectorAll('.story-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('story-' + idx).classList.add('selected');
+}
+
+async function doStarDecomposition() {
+  const resultDiv = document.getElementById('starResult');
+  const btn = document.getElementById('btnStar');
+
+  if (selectedStoryIdx < 0 || !narrativeStories[selectedStoryIdx]) {
+    resultDiv.innerHTML = '<p style="color:#5A3FCF;">请先选择一条故事线索</p>';
+    return;
+  }
+
+  btn.disabled = true;
+  resultDiv.innerHTML = '<div class="loading-spinner">AI 正在进行 STAR 拆解...</div>';
+
+  const story = narrativeStories[selectedStoryIdx];
+  const content = `${story.title} - ${story.key_moment} - ${story.insight}`;
+  const clues = [story.theme, story.emotion].filter(Boolean);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/chat/narrative`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, stage: 'star_decomposition', content, clues }),
+    });
+    const data = await res.json();
+    const exp = (data.result && data.result.experiences) || [];
+
+    let html = '<div class="star-result"><h4>⭐ STAR 分析结果</h4>';
+    exp.forEach(e => {
+      html += `
+        <div class="star-item">
+          <div class="star-title">${escapeHtml(e.title || '')}</div>
+          <div class="star-field"><strong>S 情境：</strong>${escapeHtml(e.situation || '')}</div>
+          <div class="star-field"><strong>T 任务：</strong>${escapeHtml(e.task || '')}</div>
+          <div class="star-field"><strong>A 行动：</strong>${escapeHtml(e.action || '')}</div>
+          <div class="star-field"><strong>R 结果：</strong>${escapeHtml(e.result || '')}</div>
+          <div class="star-field"><strong>关联度：</strong>${escapeHtml(e.relevance || '')}</div>
+          <div class="star-skills">${(e.skills || []).map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>
+        </div>`;
+    });
+    if (data.result && data.result.summary) {
+      html += `<p style="font-size:12px;color:#8E8EA0;margin-top:8px;"><strong>总结：</strong>${escapeHtml(data.result.summary)}</p>`;
+    }
+    if (data.result && data.result.highlights) {
+      html += `<p style="font-size:12px;color:#5A3FCF;margin-top:4px;"><strong>亮点：</strong>${data.result.highlights.map(h => escapeHtml(h)).join('、')}</p>`;
+    }
+    html += '</div>';
+    resultDiv.innerHTML = html;
+  } catch (e) {
+    resultDiv.innerHTML = '<p style="color:red;">请求失败: ' + e.message + '</p>';
+  }
+  btn.disabled = false;
+}
+
+// ===== 启动 =====
+init();
+</script>
+</body>
+</html>
