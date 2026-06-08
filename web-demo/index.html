@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一步 StepOne · AI 求职成长陪伴</title>
+<style>
+:root{--primary:#F97316;--primary-light:#FB923C;--bg:#F8F9FB;--sidebar-bg:#FFF;--sidebar-text:#64748B;--sidebar-hover:#F1F5F9;--sidebar-active:#FFF7ED;--sidebar-active-text:#EA580C;--card-bg:#fff;--text:#1E293B;--text-secondary:#64748B;--border:#E2E8F0;--radius:16px;--shadow:0 1px 3px rgba(0,0,0,.05)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);height:100vh;display:flex;overflow:hidden;color:var(--text)}
+
+.sidebar{width:240px;min-width:240px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 16px;overflow-y:auto}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:24px;cursor:pointer}
+.sidebar-logo .sl-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sidebar-logo .sl-text{font-size:18px;font-weight:800;color:var(--text)}
+.sidebar-section{margin-bottom:4px}
+.ss-title{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#94A3B8;padding:8px 12px 4px;font-weight:600}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--sidebar-text);font-size:14px;transition:all .15s;margin-bottom:2px}
+.sidebar-item:hover{background:var(--sidebar-hover);color:var(--text)}
+.sidebar-item.active{background:var(--sidebar-active);color:var(--sidebar-active-text);font-weight:600}
+.si-icon{font-size:18px;width:22px;text-align:center}
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-radius:10px}
+.sidebar-user:hover{background:var(--sidebar-hover)}
+.su-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.su-name{font-size:13px;font-weight:600;color:var(--text)}
+.su-sub{font-size:11px;color:var(--text-secondary)}
+
+.main{flex:1;display:flex;height:100vh;overflow:hidden}
+.center-content{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;padding:24px 28px}
+.cc-header{margin-bottom:20px;flex-shrink:0}
+.cc-header h1{font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px}
+.cc-header p{font-size:14px;color:var(--text-secondary)}
+
+.right-panel{width:320px;min-width:320px;height:100vh;background:var(--sidebar-bg);border-left:1px solid var(--border);padding:20px;display:flex;flex-direction:column;overflow-y:auto}
+.rp-section{margin-bottom:16px}
+.rps-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.rps-filter{font-size:12px;color:var(--primary);cursor:pointer;font-weight:500}
+.rp-list-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:all .15s;margin-bottom:4px}
+.rp-list-item:hover{background:var(--sidebar-hover)}
+.rpli-icon{width:34px;height:34px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rpli-info{flex:1;min-width:0}
+.rpli-title{font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rpli-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
+
+.page{display:none;flex-direction:column;height:100%}
+.page.active{display:flex}
+.tool-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-shrink:0}
+.th-back{cursor:pointer;font-size:20px;color:var(--text-secondary);padding:4px;transition:color .15s}
+.th-back:hover{color:var(--primary)}
+.th-title{font-size:18px;font-weight:700;color:var(--text)}
+.tool-body{flex:1;overflow-y:auto;max-width:700px;width:100%;margin:0 auto;padding-bottom:24px}
+
+.home-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.stat-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.sc-label{font-size:12px;color:var(--text-secondary);margin-bottom:4px}
+.sc-value{font-size:28px;font-weight:800;color:var(--text)}
+.sc-change{font-size:12px;color:#22C55E;margin-top:4px}
+.sc-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:10px}
+.sc-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:3px}
+
+.home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;flex:1;overflow-y:auto;align-content:start}
+.home-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s;border:1.5px solid transparent;box-shadow:var(--shadow)}
+.home-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 16px rgba(249,115,22,.1)}
+.hc-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.hc-icon{width:44px;height:44px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px}
+.hc-title{font-size:15px;font-weight:700;color:var(--text)}
+.hc-desc{font-size:13px;color:var(--text-secondary);line-height:1.5}
+
+.chat-messages{flex:1;overflow-y:auto;padding:0 0 16px;display:flex;flex-direction:column;gap:16px}
+.welcome-center{text-align:center;padding:40px 20px;max-width:600px;margin:auto}
+.wc-emoji{font-size:48px;margin-bottom:12px}
+.wc-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
+.wc-desc{font-size:14px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6}
+.quick-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.quick-chip{padding:10px 16px;background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer;transition:all .15s}
+.quick-chip:hover{border-color:var(--primary);color:var(--primary)}
+.msg-row{display:flex;gap:12px;max-width:700px;width:100%;margin:0 auto}
+.msg-row.user{flex-direction:row-reverse}
+.msg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--bg)}
+.msg-bubble{max-width:80%;padding:14px 18px;border-radius:16px;font-size:14px;line-height:1.7;word-break:break-word}
+.msg-row.user .msg-bubble{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+.msg-row.bot .msg-bubble{background:var(--card-bg);color:var(--text);border-bottom-left-radius:4px;box-shadow:var(--shadow)}
+.typing-cursor{animation:blink .8s infinite}@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.chat-input-area{padding-top:16px;border-top:1px solid var(--border);flex-shrink:0}
+.input-wrapper{max-width:700px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.input-wrapper input{flex:1;padding:14px 20px;background:var(--card-bg);border:1.5px solid var(--border);border-radius:24px;font-size:14px;outline:none}
+.input-wrapper input:focus{border-color:var(--primary)}
+.input-wrapper button{padding:14px 24px;background:var(--primary);color:#fff;border:none;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer}
+.input-wrapper button:disabled{opacity:.5}
+.input-hint{display:flex;justify-content:space-between;max-width:700px;margin:8px auto 0}
+.input-hint span{font-size:11px;color:var(--text-secondary);cursor:pointer}
+
+.btn-primary{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-sm{padding:8px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-outline{padding:10px 20px;background:transparent;color:var(--primary);border:1.5px solid var(--primary);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
+.file-upload-wrap{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.file-upload-label{padding:8px 16px;background:var(--bg);border:1.5px dashed var(--border);border-radius:10px;font-size:12px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.file-upload-label:hover{border-color:var(--primary);color:var(--primary)}
+.file-upload-label input{display:none}
+.file-name{font-size:12px;color:var(--primary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-clear{font-size:16px;color:var(--text-secondary);cursor:pointer;padding:2px}
+.card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.section-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px}
+.progress-bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.pb-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:4px;transition:width .3s}
+.loading{text-align:center;padding:24px;color:var(--text-secondary);font-size:13px}
+.empty-state{text-align:center;padding:60px 20px}
+.es-icon{font-size:48px;margin-bottom:12px}
+.es-text{font-size:14px;color:var(--text-secondary)}
+.es-text2{font-size:13px;color:#94A3B8;margin-top:4px}
+
+.ob-stepper{display:flex;gap:8px;margin-bottom:20px}
+.obs{flex:1;height:4px;background:var(--border);border-radius:2px;transition:background .3s}
+.obs.active{background:var(--primary)}
+.ob-question{background:var(--card-bg);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.oq-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.oq-sub{font-size:14px;color:var(--text-secondary);margin-bottom:20px}
+.option-list{display:flex;flex-direction:column;gap:10px}
+.option-item{padding:16px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
+.option-item:hover{border-color:var(--primary);background:var(--sidebar-hover)}
+.option-item.sel{border-color:var(--primary);background:var(--sidebar-active)}
+.oi-label{font-size:15px;color:var(--text);font-weight:500}
+.oi-hint{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.oi-check{color:var(--primary);font-weight:700;font-size:18px}
+
+.hq-card{background:var(--card-bg);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);text-align:center}
+.hq-progress{font-size:13px;color:var(--text-secondary);margin-bottom:16px}
+.hq-opt{padding:20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;margin-bottom:12px;transition:all .15s;text-align:left}
+.hq-opt:hover{border-color:var(--primary);background:var(--sidebar-hover)}
+.hq-opt.sel{border-color:var(--primary);background:var(--sidebar-active)}
+.hq-opt-text{font-size:15px;color:var(--text);line-height:1.5}
+.hq-vs{text-align:center;color:var(--text-secondary);font-size:13px;margin:4px 0;font-weight:600}
+.result-box{background:var(--card-bg);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);text-align:center}
+.result-code{font-size:36px;font-weight:800;color:var(--primary);margin:12px 0;letter-spacing:4px}
+.type-list{text-align:left;font-size:13px;line-height:2;margin-top:16px}
+
+.depth-steps{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.ds{padding:6px 14px;border-radius:20px;font-size:12px;background:var(--bg);color:var(--text-secondary)}
+.ds.active{background:var(--primary);color:#fff}
+
+.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.template-card{padding:16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;transition:all .15s}
+.template-card:hover{border-color:var(--primary)}
+.template-card.sel{border-color:var(--primary);background:var(--sidebar-active)}
+.tc-name{font-size:15px;font-weight:700;color:var(--text)}
+.tc-stages{font-size:13px;color:var(--text-secondary);margin-top:4px}
+.stage-card{background:var(--card-bg);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.sc-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.sc-name{font-size:16px;font-weight:700;color:var(--text)}
+.sc-badge{padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600}
+.sc-badge.pending{background:#FEF3C7;color:#92400E}
+.sc-badge.completed{background:#DCFCE7;color:#166534}
+.sc-milestones{margin-top:12px}
+.sc-ms-item{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;color:var(--text);cursor:pointer}
+.sc-ms-check{width:20px;height:20px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.sc-ms-check.done{background:var(--primary);border-color:var(--primary);color:#fff}
+
+.milestone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.ms-card{background:var(--card-bg);border-radius:12px;padding:16px;box-shadow:var(--shadow);display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:all .15s}
+.ms-card:hover{transform:translateY(-1px)}
+.ms-card.done{opacity:.6}
+.ms-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+.ms-check.done{background:var(--primary);border-color:var(--primary);color:#fff}
+.ms-text{flex:1;font-size:14px;color:var(--text);line-height:1.5}
+.ms-text.done{text-decoration:line-through;color:var(--text-secondary)}
+.ms-del{font-size:18px;color:#CBD5E1;cursor:pointer;flex-shrink:0;padding:2px}
+.ms-del:hover{color:#EF4444}
+.add-milestone{display:flex;gap:8px;margin-top:16px}
+.add-milestone input{flex:1;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none}
+.add-milestone input:focus{border-color:var(--primary)}
+.add-milestone button{padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer}
+
+.anxiety-box{margin-bottom:16px}
+.anxiety-box textarea{width:100%;height:120px;padding:16px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;outline:none;resize:vertical;font-family:inherit}
+.anxiety-box textarea:focus{border-color:var(--primary)}
+.comfort-card{background:var(--card-bg);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-top:16px;line-height:1.7;font-size:14px;white-space:pre-wrap}
+
+.calendar{background:var(--card-bg);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{font-size:20px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .15s}
+.cal-nav:hover{background:var(--sidebar-hover);color:var(--text)}
+.cal-title{font-size:14px;font-weight:700;color:var(--text)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text-secondary);margin-bottom:6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:6px;cursor:pointer;color:var(--text);transition:all .15s;position:relative}
+.cal-day:hover{background:var(--sidebar-hover)}
+.cal-day.today{background:var(--primary);color:#fff;font-weight:700}
+.cal-day.other{color:#CBD5E1}
+.cal-day.has-event::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--primary)}
+.cal-day.today.has-event::after{background:#fff}
+.cal-day.selected{border:2px solid var(--primary)}
+
+.event-type-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ets-item{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.ets-item:hover{border-color:var(--primary)}
+.ets-item.sel{border-color:var(--primary);background:var(--sidebar-active);color:var(--primary);font-weight:600}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--card-bg);border-radius:var(--radius);padding:24px;width:400px;max-width:90vw;box-shadow:0 10px 40px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
+.modal-box .modal-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px}
+.modal-box input,.modal-box textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;outline:none;font-family:inherit;margin-bottom:10px}
+.modal-box input:focus,.modal-box textarea:focus{border-color:var(--primary)}
+.modal-box textarea{height:80px;resize:vertical}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.modal-actions button{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none}
+.ma-cancel{background:var(--bg);color:var(--text-secondary)}
+.ma-save{background:var(--primary);color:#fff}
+.ma-delete{background:#FEE2E2;color:#EF4444}
+
+/* 新手指引遮罩 */
+.guide-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center}
+.guide-overlay.show{display:flex}
+.guide-box{background:var(--card-bg);border-radius:var(--radius);padding:32px;text-align:center;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.guide-box .gb-emoji{font-size:56px;margin-bottom:16px}
+.guide-box .gb-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px}
+.guide-box .gb-desc{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:24px}
+.guide-box .gb-features{text-align:left;margin-bottom:24px}
+.guide-box .gb-feature{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;color:var(--text)}
+.guide-box .gb-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0}
+.guide-box button{padding:14px 48px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}
+.guide-box .gb-skip{font-size:12px;color:var(--text-secondary);cursor:pointer;margin-top:12px;display:block}
+
+/* ===== 移动端适配 ===== */
+@media(max-width:1024px){
+  .right-panel{width:260px;min-width:260px}
+}
+@media(max-width:768px){
+  body{flex-direction:column;height:auto;overflow:auto}
+  .sidebar{width:100%;min-width:0;height:auto;flex-direction:row;flex-wrap:wrap;padding:10px 8px;gap:4px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+  .sidebar-logo{display:none}
+  .sidebar-section{display:flex;gap:4px;flex-wrap:wrap}
+  .ss-title{display:none}
+  .sidebar-item{padding:6px 10px;font-size:12px;gap:6px;white-space:nowrap;margin-bottom:0}
+  .sidebar-item .si-icon{font-size:14px;width:auto}
+  .sidebar-footer{display:none}
+  .main{flex-direction:column;height:auto}
+  .center-content{padding:12px;height:auto}
+  .right-panel{width:100%;min-width:0;height:auto;border-left:none;border-top:1px solid var(--border);padding:12px;flex-direction:row;flex-wrap:wrap;gap:12px}
+  .right-panel .calendar{flex:1;min-width:260px}
+  .right-panel .rp-section{flex:1;min-width:200px}
+  .home-stats{grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat-card{padding:12px}
+  .stat-card .sc-value{font-size:22px}
+  .home-grid{grid-template-columns:1fr;gap:10px}
+  .home-card{padding:14px}
+  .cc-header h1{font-size:20px}
+  .chat-messages{padding:0 0 12px}
+  .msg-row{max-width:100%}
+  .msg-bubble{max-width:90%}
+  .input-wrapper{max-width:100%}
+  .tool-body{max-width:100%}
+  .milestone-grid{grid-template-columns:1fr}
+  .template-grid{grid-template-columns:1fr}
+  .modal-box{width:95vw;padding:16px}
+  .guide-box{max-width:90vw;padding:24px}
+  .guide-box .gb-emoji{font-size:40px}
+  .guide-box .gb-title{font-size:18px}
+}
+
+@media(max-width:480px){
+  .sidebar{padding:8px 4px}
+  .sidebar-item{padding:5px 8px;font-size:11px;gap:4px;border-radius:6px}
+  .sidebar-item .si-icon{font-size:13px}
+  .center-content{padding:8px}
+  .home-stats{grid-template-columns:1fr;gap:8px}
+  .stat-card{padding:14px;display:flex;align-items:center;gap:12px}
+  .stat-card .sc-value{font-size:24px}
+  .stat-card .sc-change{font-size:11px}
+  .home-grid{grid-template-columns:1fr}
+  .home-card{padding:12px}
+  .hc-icon{width:36px;height:36px;font-size:18px}
+  .hc-title{font-size:14px}
+  .hc-desc{font-size:12px}
+  .cc-header h1{font-size:18px}
+  .cc-header p{font-size:12px}
+  .right-panel{flex-direction:column;padding:8px}
+  .right-panel .calendar{min-width:auto}
+  .right-panel .rp-section{min-width:auto}
+  .msg-bubble{padding:10px 14px;font-size:13px}
+  .input-wrapper input{padding:10px 14px;font-size:13px}
+  .input-wrapper button{padding:10px 16px;font-size:13px}
+  .tool-header .th-title{font-size:16px}
+  .card{padding:14px}
+  .ob-question{padding:16px}
+  .oq-title{font-size:16px}
+  .option-item{padding:12px}
+  .oi-label{font-size:14px}
+  .hq-opt{padding:14px}
+  .hq-opt-text{font-size:14px}
+  .result-code{font-size:28px}
+  .btn-primary{padding:12px;font-size:13px}
+  .cal-day{font-size:10px}
+  .cal-nav{font-size:16px}
+  .cal-title{font-size:12px}
+  .event-type-select{gap:4px}
+  .ets-item{padding:4px 10px;font-size:11px}
+  .modal-actions button{padding:6px 14px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo" onclick="navTo('home')">
+    <div class="sl-icon">🚀</div><div class="sl-text">一步</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-item active" data-nav="home" onclick="navTo('home')"><span class="si-icon">🏠</span>首页</div>
+    <div class="sidebar-item" data-nav="chat" onclick="navTo('chat')"><span class="si-icon">💬</span>AI 对话</div>
+    <div class="sidebar-item" data-nav="radar" onclick="navTo('radar')"><span class="si-icon">📊</span>能力雷达</div>
+    <div class="sidebar-item" data-nav="profile" onclick="navTo('profile')"><span class="si-icon">👤</span>我的画像</div>
+    <div class="sidebar-item" data-nav="roadmap" onclick="navTo('roadmap')"><span class="si-icon">🗺️</span>发展路径</div>
+    <div class="sidebar-item" data-nav="milestones" onclick="navTo('milestones')"><span class="si-icon">🏔️</span>里程碑</div>
+    <div class="sidebar-item" data-nav="narrative" onclick="navTo('narrative')"><span class="si-icon">📖</span>叙事重构</div>
+    <div class="sidebar-item" data-nav="resume" onclick="navTo('resume')"><span class="si-icon">📄</span>简历优化</div>
+    <div class="sidebar-item" data-nav="interview" onclick="navTo('interview')"><span class="si-icon">🎙️</span>面试准备</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="ss-title">自我认知</div>
+    <div class="sidebar-item" data-nav="onboarding" onclick="navTo('onboarding')"><span class="si-icon">🎯</span>个人定位</div>
+    <div class="sidebar-item" data-nav="holland" onclick="navTo('holland')"><span class="si-icon">🧭</span>职业测试</div>
+    <div class="sidebar-item" data-nav="profile" onclick="navTo('profile')"><span class="si-icon">👤</span>我的画像</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="ss-title">社区与情绪</div>
+    <div class="sidebar-item" data-nav="circle" onclick="navTo('circle')"><span class="si-icon">👥</span>一步圈</div>
+    <div class="sidebar-item" data-nav="anxiety" onclick="navTo('anxiety')"><span class="si-icon">🧘</span>喘口气</div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-user" onclick="navTo('profile')">
+      <div class="su-avatar">🧑‍🎓</div>
+      <div><div class="su-name" id="sidebarName">同学</div><div class="su-sub" id="sidebarStage">未定位</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+<div class="center-content">
+
+<!-- HOME -->
+<div id="home-page" class="page active">
+  <div class="cc-header">
+    <h1 id="homeGreeting">欢迎来到一步</h1>
+    <p>AI 驱动的求职成长陪伴工具，帮你发现方向、整理经历、准备求职。</p>
+  </div>
+  <div class="home-stats">
+    <div class="stat-card"><div class="sc-label">当前阶段</div><div class="sc-value" id="statStage">-</div><div class="sc-change">基于学历和年级</div></div>
+    <div class="stat-card"><div class="sc-label">已完成里程碑</div><div class="sc-value" id="statMs">0</div><div class="sc-change">继续加油</div><div class="sc-bar"><div class="sc-fill" id="statMsBar" style="width:0%"></div></div></div>
+    <div class="stat-card"><div class="sc-label">对话深度</div><div class="sc-value" id="statDepth">1</div><div class="sc-change">层 / 共5层</div></div>
+  </div>
+  <div class="home-grid">
+    <div class="home-card" onclick="navTo('chat')"><div class="hc-header"><div class="hc-icon">💬</div><div class="hc-title">AI 对话</div></div><div class="hc-desc">和 AI 聊聊经历、困惑和目标，获得个性化求职建议与陪伴。</div></div>
+    <div class="home-card" onclick="navTo('radar')"><div class="hc-header"><div class="hc-icon">📊</div><div class="hc-title">能力雷达</div></div><div class="hc-desc">基于对话动态生成多维度能力画像，可视化独特优势。</div></div>
+    <div class="home-card" onclick="navTo('profile')"><div class="hc-header"><div class="hc-icon">👤</div><div class="hc-title">我的画像</div></div><div class="hc-desc">查看你的专业、学历、阶段、目标行业等完整求职画像。</div></div>
+    <div class="home-card" onclick="navTo('roadmap')"><div class="hc-header"><div class="hc-icon">🗺️</div><div class="hc-title">发展路径</div></div><div class="hc-desc">AI 定制从基础到冲刺的完整成长路线，分阶段执行。</div></div>
+    <div class="home-card" onclick="navTo('milestones')"><div class="hc-header"><div class="hc-icon">🏔️</div><div class="hc-title">里程碑</div></div><div class="hc-desc">自定义成长目标，卡片式追踪，只对标自己的进度。</div></div>
+    <div class="home-card" onclick="navTo('narrative')"><div class="hc-header"><div class="hc-icon">📖</div><div class="hc-title">叙事重构</div></div><div class="hc-desc">经历→STAR→简历。故事挖掘与 STAR 法则拆解。</div></div>
+    <div class="home-card" onclick="navTo('resume')"><div class="hc-header"><div class="hc-icon">📄</div><div class="hc-title">简历优化</div></div><div class="hc-desc">上传或粘贴简历，AI 帮你用 STAR 法则重写优化。</div></div>
+    <div class="home-card" onclick="navTo('interview')"><div class="hc-header"><div class="hc-icon">🎙️</div><div class="hc-title">面试准备</div></div><div class="hc-desc">针对目标岗位生成个性化面试准备包。</div></div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat-page" class="page">
+  <div class="chat-messages" id="chatMessages">
+    <div class="welcome-center" id="welcomeBox">
+      <div class="wc-emoji">💬</div><div class="wc-title">把经历扔给我，帮你写成简历</div>
+      <div class="wc-desc">告诉我你做过什么项目、实习、比赛，我来帮你整理、拆解、转成 STAR 语言。</div>
+      <div class="quick-chips">
+        <span class="quick-chip" onclick="sendQuick('帮我整理经历')">直接扔经历给我</span>
+        <span class="quick-chip" onclick="sendQuick('帮我拆解实习经历')">拆解实习经历</span>
+        <span class="quick-chip" onclick="sendQuick('看看匹配度')">看看匹配度</span>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <div style="max-width:700px;margin:0 auto 8px">
+      <div class="file-upload-wrap">
+        <label class="file-upload-label" for="chatFile">📎 上传文件</label>
+        <input type="file" id="chatFile" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onchange="handleChatFile(this)">
+        <span class="file-name" id="chatFileName"></span>
+        <span class="file-clear" id="chatFileClear" style="display:none" onclick="clearChatFile()">&times;</span>
+      </div>
+    </div>
+    <div class="input-wrapper">
+      <input type="text" id="msgInput" placeholder="输入你想问的..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button id="sendBtn" onclick="sendMessage()">发送</button>
+    </div>
+    <div class="input-hint"><span onclick="clearChat()">清空对话</span><span id="depthHint">深度：建立连接</span></div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboarding-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🎯 个人定位</span></div>
+  <div class="tool-body"><div class="ob-stepper" id="obStepper"></div><div id="onboardingBody"></div></div>
+</div>
+
+<!-- HOLLAND -->
+<div id="holland-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🧭 职业测试</span></div>
+  <div class="tool-body" id="hollandBody"></div>
+</div>
+
+<!-- RADAR -->
+<div id="radar-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">📊 能力雷达图</span></div>
+  <div class="tool-body" id="radarBody"></div>
+</div>
+
+<!-- ROADMAP -->
+<div id="roadmap-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🗺️ 发展路径</span></div>
+  <div class="tool-body" id="roadmapBody"></div>
+</div>
+
+<!-- MILESTONES -->
+<div id="milestones-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🏔️ 里程碑</span></div>
+  <div class="tool-body">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:14px;color:var(--text-secondary)">完成进度</span>
+        <span style="font-size:14px;font-weight:600;color:var(--primary)" id="msProgress">0/0</span>
+      </div>
+      <div class="progress-bar"><div class="pb-fill" id="msProgressBar" style="width:0%"></div></div>
+    </div>
+    <div class="milestone-grid" id="milestoneGrid"><div class="empty-state"><div class="es-icon">📝</div><div class="es-text">还没有里程碑，在下方添加吧</div></div></div>
+    <div class="add-milestone">
+      <input type="text" id="msInput" placeholder="写下你想达成的目标..." onkeydown="if(event.key==='Enter')addMilestone()">
+      <button onclick="addMilestone()">添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- NARRATIVE -->
+<div id="narrative-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">📖 叙事重构</span></div>
+  <div class="tool-body">
+    <div class="card"><div class="section-title">故事挖掘</div>
+      <textarea id="storyText" placeholder="描述你的一段经历，或上传简历/文档自动提取..." style="width:100%;height:100px;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;margin-bottom:12px"></textarea>
+      <div class="file-upload-wrap">
+        <label class="file-upload-label" for="storyFile">📎 上传简历/文档</label>
+        <input type="file" id="storyFile" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onchange="handleFileSelect(this,'storyFileName','storyFileClear')">
+        <span class="file-name" id="storyFileName"></span>
+        <span class="file-clear" id="storyFileClear" style="display:none" onclick="clearFileInput('storyFile','storyFileName','storyFileClear')">&times;</span>
+      </div>
+      <button class="btn-primary" onclick="doStoryMining()">挖掘故事</button>
+      <div id="storyMiningResult" style="margin-top:16px"></div>
+    </div>
+    <div class="card"><div class="section-title">STAR 拆解</div>
+      <div id="starArea"><div class="es-text" style="padding:20px 0">先挖掘故事，再选择故事进行 STAR 拆解</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESUME -->
+<div id="resume-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">📄 简历优化</span></div>
+  <div class="tool-body">
+    <div class="card"><div class="section-title">简历优化</div>
+      <textarea id="resumeText" placeholder="粘贴你的简历内容，或上传简历文件..." style="width:100%;height:150px;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;margin-bottom:12px"></textarea>
+      <div class="file-upload-wrap">
+        <label class="file-upload-label" for="resumeFile">📎 上传简历文件</label>
+        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onchange="handleFileSelect(this,'resumeFileName','resumeFileClear')">
+        <span class="file-name" id="resumeFileName"></span>
+        <span class="file-clear" id="resumeFileClear" style="display:none" onclick="clearFileInput('resumeFile','resumeFileName','resumeFileClear')">&times;</span>
+      </div>
+      <button class="btn-primary" onclick="optimizeResume()">优化简历</button>
+      <div id="resumeResult" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERVIEW -->
+<div id="interview-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🎙️ 面试准备</span></div>
+  <div class="tool-body">
+    <div class="card"><div class="section-title">目标岗位</div>
+      <input type="text" id="intTarget" placeholder="目标岗位（如：前端开发）" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;margin-bottom:12px">
+    </div>
+    <div class="card"><div class="section-title">📄 你的简历</div>
+      <textarea id="intResume" placeholder="粘贴简历内容，或上传简历文件..." style="width:100%;height:100px;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;margin-bottom:10px"></textarea>
+      <div class="file-upload-wrap">
+        <label class="file-upload-label" for="intResumeFile">📎 上传简历</label>
+        <input type="file" id="intResumeFile" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onchange="handleFileSelect(this,'intResumeFileName','intResumeFileClear')">
+        <span class="file-name" id="intResumeFileName"></span>
+        <span class="file-clear" id="intResumeFileClear" style="display:none" onclick="clearFileInput('intResumeFile','intResumeFileName','intResumeFileClear')">&times;</span>
+      </div>
+    </div>
+    <div class="card"><div class="section-title">📋 岗位 JD</div>
+      <textarea id="intJd" placeholder="粘贴岗位JD，或上传JD文件..." style="width:100%;height:100px;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;margin-bottom:10px"></textarea>
+      <div class="file-upload-wrap">
+        <label class="file-upload-label" for="intJdFile">📎 上传JD文件</label>
+        <input type="file" id="intJdFile" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" onchange="handleFileSelect(this,'intJdFileName','intJdFileClear')">
+        <span class="file-name" id="intJdFileName"></span>
+        <span class="file-clear" id="intJdFileClear" style="display:none" onclick="clearFileInput('intJdFile','intJdFileName','intJdFileClear')">&times;</span>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="doInterviewPrep()">生成面试准备包</button>
+    <div id="intResult" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<!-- ANXIETY -->
+<div id="anxiety-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">🧘 喘口气</span></div>
+  <div class="tool-body">
+    <div class="empty-state" style="padding:40px 20px">
+      <div class="es-icon">🌳</div>
+      <div class="es-text" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">树洞时刻</div>
+      <div class="es-text">把你的焦虑写下来，AI 会给你温暖的回应</div>
+    </div>
+    <div class="anxiety-box"><textarea id="anxietyText" placeholder="写下你现在的感受..."></textarea>
+      <button class="btn-primary" style="margin-top:12px" onclick="sendAnxiety()">投入树洞</button>
+    </div>
+    <div id="comfortResult"></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">👤 我的画像</span></div>
+  <div class="tool-body" id="profileBody"></div>
+</div>
+
+<!-- CIRCLE -->
+<div id="circle-page" class="page">
+  <div class="tool-header"><span class="th-back" onclick="navTo('home')">&larr;</span><span class="th-title">👥 一步圈</span></div>
+  <div class="tool-body" id="circleBody">
+    <div class="card">
+      <div class="section-title">🎓 校友前辈网络</div>
+      <div style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">连接同校毕业的前辈，了解真实职场体验。</div>
+      <div class="rp-list-item" style="cursor:default"><div class="rpli-icon" style="background:#DBEAFE">🏢</div><div class="rpli-info"><div class="rpli-title">腾讯 - 产品经理</div><div class="rpli-sub">清华大学 · 2023届</div></div><button class="btn-sm" style="flex-shrink:0">预约交流</button></div>
+      <div class="rp-list-item" style="cursor:default"><div class="rpli-icon" style="background:#FEF3C7">📊</div><div class="rpli-info"><div class="rpli-title">字节跳动 - 后端开发</div><div class="rpli-sub">北京大学 · 2024届</div></div><button class="btn-sm" style="flex-shrink:0">预约交流</button></div>
+    </div>
+    <div class="card">
+      <div class="section-title">📢 校招动态</div>
+      <div class="rp-list-item" style="cursor:default"><div class="rpli-icon" style="background:#DCFCE7">🆕</div><div class="rpli-info"><div class="rpli-title">腾讯2027届校招提前批启动</div><div class="rpli-sub">技术岗 · 7月15日开始</div></div></div>
+      <div class="rp-list-item" style="cursor:default"><div class="rpli-icon" style="background:#FEE2E2">📅</div><div class="rpli-info"><div class="rpli-title">字节跳动校园宣讲会</div><div class="rpli-sub">6月20日 · 线上直播</div></div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">💬 匿名问答</div>
+      <div style="margin-bottom:12px">
+        <input type="text" id="circleQuestion" placeholder="匿名提问求职相关问题..." style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;outline:none">
+      </div>
+      <button class="btn-primary" onclick="submitCircleQuestion()">提交提问</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="calendar" id="calendar">
+    <div class="cal-header">
+      <span class="cal-nav" onclick="changeMonth(-1)">&lsaquo;</span>
+      <span class="cal-title" id="calTitle"></span>
+      <span class="cal-nav" onclick="changeMonth(1)">&rsaquo;</span>
+    </div>
+    <div class="cal-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+  <div class="rp-section" style="margin-top:16px">
+    <div class="rps-title">今日日程 <span class="rps-filter" onclick="addEvent()">+ 添加</span></div>
+    <div id="todayEvents"><div class="rp-list-item"><div class="rpli-icon" style="background:#F1F5F9">📅</div><div class="rpli-info"><div class="rpli-title">暂无日程</div></div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- EVENT MODAL -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">添加日程</div>
+    <input type="date" id="eventDate">
+    <input type="text" id="eventTitle" placeholder="日程标题">
+    <textarea id="eventDesc" placeholder="备注（选填）"></textarea>
+    <div class="section-title" style="font-size:13px;margin-bottom:8px">日程类型</div>
+    <div class="event-type-select" id="eventTypeSelect">
+      <div class="ets-item sel" data-type="面试" onclick="selectEventType('面试',this)"><span>🎙️</span>面试</div>
+      <div class="ets-item" data-type="笔试" onclick="selectEventType('笔试',this)"><span>📝</span>笔试</div>
+      <div class="ets-item" data-type="宣讲会" onclick="selectEventType('宣讲会',this)"><span>📢</span>宣讲会</div>
+      <div class="ets-item" data-type="投递截止" onclick="selectEventType('投递截止',this)"><span>⏰</span>投递截止</div>
+      <div class="ets-item" data-type="Offer" onclick="selectEventType('Offer',this)"><span>🎉</span>Offer</div>
+      <div class="ets-item" data-type="其他" onclick="selectEventType('其他',this)"><span>📌</span>其他</div>
+    </div>
+    <div class="modal-actions">
+      <button class="ma-delete" id="btnDeleteEvent" style="display:none" onclick="deleteEvent()">删除</button>
+      <button class="ma-cancel" onclick="closeEventModal()">取消</button>
+      <button class="ma-save" onclick="saveEvent()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE OVERLAY - Step 1: Intro + Create Account -->
+<div class="guide-overlay" id="guideOverlay">
+  <div class="guide-box" id="guideStep1">
+    <div class="gb-emoji">🚀</div>
+    <div class="gb-title">欢迎来到一步 StepOne</div>
+    <div class="gb-desc">一款 AI 驱动的求职成长陪伴工具，<br>帮你从迷茫到上岸。</div>
+    <div class="gb-features">
+      <div class="gb-feature"><div class="gb-dot"></div>AI 对话 · 整理经历、挖掘亮点</div>
+      <div class="gb-feature"><div class="gb-dot"></div>能力雷达 · 可视化你的多维优势</div>
+      <div class="gb-feature"><div class="gb-dot"></div>发展路径 · 定制成长路线图</div>
+      <div class="gb-feature"><div class="gb-dot"></div>简历优化 + 面试准备 · STAR 法则加持</div>
+      <div class="gb-feature"><div class="gb-dot"></div>职业测试 · 发现适合的方向</div>
+    </div>
+    <input type="text" id="guideNickname" placeholder="请输入你的名字（创建账号）" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;margin-bottom:12px;text-align:center">
+    <button onclick="createAccount()">创建账号，开始定位 🎯</button>
+    <span class="gb-skip" onclick="closeGuide()">跳过，直接进入首页</span>
+  </div>
+  <!-- Step 2: Onboarding (replaces guide box content) -->
+</div>
+
+<script>
+"use strict";
+var API_BASE='';
+var userId=null;
+var messages=[];
+var milestones=[];
+var selectedStoryIdx=-1;
+var narrativeStories=[];
+var hollandQuestions=[];
+var hollandAnswers=[];
+var hollandSubmitted=false;
+var hollandIdx=0;
+var obQuestions=[];
+var obStep=0;
+var obAnswers={};
+var selectedTemplate=null;
+var calYear,calMonth,calSelected;
+var events=JSON.parse(localStorage.getItem('stepone_events')||'{}');
+var editingDate=null;
+var editingIdx=null;
+var selectedEventType='面试';
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function navTo(name){
+  var pages=document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++)pages[i].classList.remove('active');
+  var items=document.querySelectorAll('.sidebar-item');
+  for(var j=0;j<items.length;j++)items[j].classList.remove('active');
+  var el=document.getElementById(name+'-page');
+  if(el)el.classList.add('active');
+  var si=document.querySelector('[data-nav="'+name+'"]');
+  if(si)si.classList.add('active');
+  if(name==='onboarding')loadOnboarding();
+  if(name==='holland')loadHolland();
+  if(name==='radar')loadRadar();
+  if(name==='roadmap')loadRoadmap();
+  if(name==='milestones')loadMilestones();
+  if(name==='profile')loadProfilePage();
+}
+
+function api(path,method,body){
+  var opts={method:method||'GET',headers:{'Content-Type':'application/json'}};
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(API_BASE+path,opts).then(function(r){return r.json();});
+}
+
+// ========== FILE UPLOAD HELPERS ==========
+var chatFileData=null;
+function handleChatFile(input){
+  if(input.files&&input.files[0]){
+    chatFileData=input.files[0];
+    document.getElementById('chatFileName').textContent=input.files[0].name;
+    document.getElementById('chatFileClear').style.display='inline';
+  }
+}
+function clearChatFile(){
+  chatFileData=null;
+  document.getElementById('chatFile').value='';
+  document.getElementById('chatFileName').textContent='';
+  document.getElementById('chatFileClear').style.display='none';
+}
+function handleFileSelect(input,nameId,clearId){
+  if(input.files&&input.files[0]){
+    document.getElementById(nameId).textContent=input.files[0].name;
+    document.getElementById(clearId).style.display='inline';
+  }
+}
+function clearFileInput(fileId,nameId,clearId){
+  document.getElementById(fileId).value='';
+  document.getElementById(nameId).textContent='';
+  document.getElementById(clearId).style.display='none';
+}
+async function uploadFileAndGetText(fileInputId){
+  var input=document.getElementById(fileInputId);
+  if(!input||!input.files||!input.files.length)return null;
+  var formData=new FormData();
+  formData.append('file',input.files[0]);
+  formData.append('user_id',userId);
+  try{
+    var r=await fetch(API_BASE+'/api/chat/resume/upload',{method:'POST',body:formData});
+    var d=await r.json();
+    return d.extracted_text||d.content||'';
+  }catch(e){return null;}
+}
+
+// ========== GUIDE ==========
+function closeGuide(){
+  document.getElementById('guideOverlay').classList.remove('show');
+}
+async function createAccount(){
+  var name=document.getElementById('guideNickname').value.trim();
+  if(!name){alert('请输入你的名字');return;}
+  try{
+    // Save nickname to backend
+    if(userId){
+      await api('/api/user/update-profile','POST',{user_id:userId,nickname:name});
+    }else{
+      // Create new user with nickname
+      var storedOpenid='web_'+Date.now();
+      localStorage.setItem('stepone_openid',storedOpenid);
+      var r=await api('/api/user/login','POST',{openid:storedOpenid,nickname:name});
+      userId=r.id;
+    }
+    document.getElementById('sidebarName').textContent=name;
+    // Hide guide and go to onboarding
+    document.getElementById('guideOverlay').classList.remove('show');
+    navTo('onboarding');
+  }catch(e){
+    alert('创建失败，请重试');
+  }
+}
+
+// ========== INIT ==========
+async function init(){
+  var h=new Date().getHours();
+  var g=h<12?'早上好':h<18?'下午好':'晚上好';
+  document.getElementById('homeGreeting').textContent=g+'，欢迎来到一步';
+  
+  var guideEl=document.getElementById('guideOverlay');
+  
+  try{
+    // Check if user has existing account
+    var storedOpenid=localStorage.getItem('stepone_openid');
+    if(!storedOpenid){
+      // New user - show guide
+      guideEl.classList.add('show');
+      return;
+    }
+    
+    var r=await api('/api/user/login','POST',{openid:storedOpenid});
+    userId=r.id;
+    
+    // If user completed onboarding AND has a nickname, skip guide
+    if(r.onboarding_completed && r.nickname){
+      guideEl.classList.remove('show');
+      document.getElementById('sidebarName').textContent=r.nickname;
+    }else if(r.onboarding_completed && !r.nickname){
+      // Completed onboarding but no nickname - show guide for name
+      guideEl.classList.add('show');
+    }else{
+      // Not completed - show guide
+      guideEl.classList.add('show');
+    }
+    
+    if(r.onboarding_completed){
+      document.getElementById('statStage').textContent=r.current_stage||'S1';
+      document.getElementById('sidebarStage').textContent=r.current_stage||'已定位';
+      await loadProfile();
+    }
+  }catch(e){
+    console.error('Init error:',e);
+    // New user or error - show guide
+    guideEl.classList.add('show');
+  }
+}
+
+async function loadProfile(){
+  try{
+    var d=await api('/api/user/profile/'+userId);
+    document.getElementById('sidebarName').textContent=d.nickname||'同学';
+  }catch(e){}
+}
+
+// ========== ONBOARDING ==========
+async function loadOnboarding(){
+  try{
+    var r=await api('/api/user/onboarding/questions?education_type=');
+    obQuestions=r.questions||[];
+    obStep=0;obAnswers={};
+    renderObQuestion();
+  }catch(e){
+    document.getElementById('onboardingBody').innerHTML='<div class="empty-state"><div class="es-text">加载题目失败</div></div>';
+  }
+}
+function renderObQuestion(){
+  if(!obQuestions.length){document.getElementById('onboardingBody').innerHTML='<div class="loading">加载中...</div>';return;}
+  var q=obQuestions[obStep];
+  var stepper='';
+  for(var i=0;i<obQuestions.length;i++)stepper+='<div class="obs'+(i<=obStep?' active':'')+'"></div>';
+  document.getElementById('obStepper').innerHTML=stepper;
+  var key=q.key||q.id;
+  var h='<div class="ob-question"><div class="oq-title">'+esc(q.title)+'</div>';
+  if(q.subtitle)h+='<div class="oq-sub">'+esc(q.subtitle)+'</div>';
+  h+='<div class="option-list">';
+  if(q.type==='single_choice'){
+    (q.options||[]).forEach(function(o){
+      var sel=obAnswers[key]===o.value;
+      h+='<div class="option-item'+(sel?' sel':'')+'" onclick="obSelect(\''+key+'\',\''+o.value+'\')"><div><div class="oi-label">'+esc(o.label)+'</div>';
+      if(o.stage_name)h+='<div class="oi-hint">'+(o.stage_emoji||'')+' '+esc(o.stage_name)+'</div>';
+      h+='</div>'+(sel?'<span class="oi-check">&#10003;</span>':'')+'</div>';
+    });
+  }else{
+    (q.options||[]).forEach(function(o){
+      var sel=(obAnswers[key]||[]).indexOf(o.value)>=0;
+      h+='<div class="option-item'+(sel?' sel':'')+'" onclick="obToggleMulti(\''+key+'\',\''+o.value+'\')"><div class="oi-label">'+(o.icon||'')+' '+esc(o.label)+'</div>'+(sel?'<span class="oi-check">&#10003;</span>':'')+'</div>';
+    });
+  }
+  h+='</div><button class="btn-primary" onclick="obNext()">'+(obStep>=obQuestions.length-1?'完成定位':'下一步')+'</button></div>';
+  document.getElementById('onboardingBody').innerHTML=h;
+}
+function obSelect(qid,val){
+  obAnswers[qid]=val;
+  // If education_type selected, load grade options
+  if(qid==='education_type'&&val){
+    loadGradeOptions(val);
+    return;
+  }
+  renderObQuestion();
+}
+async function loadGradeOptions(eduType){
+  try{
+    var r=await api('/api/user/onboarding/grade-options?education_type='+eduType);
+    var opts=r.options||[];
+    if(opts.length){
+      // Insert grade question right after education_type (index 1), before graduation_year
+      obQuestions.splice(2,0,{key:'grade',title:'你目前是哪个年级/阶段？',subtitle:'不同年级的求职重点不同',type:'single_choice',options:opts});
+      // Rebuild stepper
+      document.getElementById('obStepper').innerHTML=obQuestions.map(function(_,i){
+        return '<div class="obs'+(i<=obStep?' active':'')+'"></div>';
+      }).join('');
+    }
+    renderObQuestion();
+  }catch(e){renderObQuestion();}
+}
+function obToggleMulti(qid,val){
+  if(!obAnswers[qid])obAnswers[qid]=[];
+  var idx=obAnswers[qid].indexOf(val);
+  if(idx>=0)obAnswers[qid].splice(idx,1);else obAnswers[qid].push(val);
+  renderObQuestion();
+}
+async function obNext(){
+  if(obStep<obQuestions.length-1){obStep++;renderObQuestion();return;}
+  try{
+    // Map answers to backend fields
+    var payload={user_id:userId};
+    for(var k in obAnswers){
+      if(obAnswers.hasOwnProperty(k)){
+        if(k==='major_category')payload.major_category=obAnswers[k];
+        else if(k==='education_type')payload.education_type=obAnswers[k];
+        else if(k==='grade')payload.grade=obAnswers[k];
+        else if(k==='graduation_year')payload.graduation_year=parseInt(obAnswers[k])||null;
+        else if(k==='career_clarity')payload.career_clarity=obAnswers[k];
+        else if(k==='current_status')payload.current_status=obAnswers[k];
+        else if(k==='target_industries')payload.target_industries=obAnswers[k];
+        else payload[k]=obAnswers[k];
+      }
+    }
+    await api('/api/user/onboarding/submit','POST',payload);
+    localStorage.setItem('stepone_onboarding_done','1');
+    location.reload();
+  }catch(e){alert('提交失败，请重试');}
+}
+
+// ========== HOLLAND ==========
+async function loadHolland(){
+  try{
+    var r=await api('/api/holland/questions');
+    hollandQuestions=r.questions||[];
+    hollandAnswers=[];hollandIdx=0;hollandSubmitted=false;
+    renderHolland();
+  }catch(e){
+    document.getElementById('hollandBody').innerHTML='<div class="empty-state"><div class="es-text">加载题目失败</div></div>';
+  }
+}
+function renderHolland(){
+  if(hollandSubmitted)return;
+  if(!hollandQuestions.length){document.getElementById('hollandBody').innerHTML='<div class="loading">加载题目中...</div>';return;}
+  var q=hollandQuestions[hollandIdx];
+  var h='<div class="hq-card"><div class="hq-progress">第 '+(hollandIdx+1)+'/'+hollandQuestions.length+' 题</div>';
+  h+='<div style="font-size:16px;font-weight:700;margin-bottom:20px;color:var(--text-secondary)">以下哪项更吸引你？</div>';
+  h+='<div class="hq-opt" onclick="hollandAnswer(\'a\')"><div class="hq-opt-text">A. '+esc(q.option_a)+'</div></div>';
+  h+='<div class="hq-vs">VS</div>';
+  h+='<div class="hq-opt" onclick="hollandAnswer(\'b\')"><div class="hq-opt-text">B. '+esc(q.option_b)+'</div></div></div>';
+  document.getElementById('hollandBody').innerHTML=h;
+}
+function hollandAnswer(choice){
+  var q=hollandQuestions[hollandIdx];
+  hollandAnswers.push(choice==='a'?q.type_a:q.type_b);
+  if(hollandIdx<hollandQuestions.length-1){hollandIdx++;renderHolland();}else submitHolland();
+}
+async function submitHolland(){
+  hollandSubmitted=true;
+  document.getElementById('hollandBody').innerHTML='<div class="loading">分析中...</div>';
+  try{
+    // Build correct answer format: [{question_id: 1, choice: "a"}, ...]
+    var formattedAnswers=hollandQuestions.map(function(q,i){
+      var choice=hollandAnswers[i]; // stored as type letter like 'R','I', etc.
+      // Determine if this letter matches option_a or option_b
+      var isA=(choice===q.type_a);
+      return {question_id:q.id,choice:isA?'a':'b'};
+    });
+    var d=await api('/api/holland/submit','POST',{user_id:userId,answers:formattedAnswers});
+    renderHollandResult(d);
+  }catch(e){document.getElementById('hollandBody').innerHTML='<div class="empty-state"><div class="es-text">提交失败，请重试</div></div>';}
+}
+function renderHollandResult(data){
+  var hr=data.holland_result||data;
+  var scores=hr.scores||{};
+  var allTypes=hr.all_types||[];
+  var topTypes=hr.top_types||[];
+  var matchedRoles=hr.matched_roles||[];
+  var types=Object.keys(scores).sort(function(a,b){return scores[b]-scores[a];});
+  var top3=types.slice(0,3).join('');
+  // Generate interpretation text
+  var interp=generateInterpretation(topTypes,allTypes);
+  // Build full result
+  var h='<div class="result-box"><div class="section-title">你的霍兰德代码</div>';
+  h+='<div class="result-code">'+top3+'</div>';
+  h+='<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">';
+  var topNames=topTypes.map(function(t){return t.name+'('+t.type+')';});
+  h+=topNames.slice(0,2).join(' + ');
+  h+='</div>';
+  // Interpretation
+  h+='<div class="card" style="text-align:left;margin-bottom:16px"><div class="section-title">综合解读</div>';
+  h+='<div style="font-size:14px;line-height:1.8">'+interp+'</div></div>';
+  // Radar chart
+  h+='<div style="margin:16px 0"><canvas id="hollandCanvas" width="280" height="280"></canvas></div>';
+  // Scores table
+  h+='<div class="type-list"><div class="section-title" style="font-size:14px">六维得分</div>';
+  types.forEach(function(t){
+    var info=allTypes.find(function(a){return a.type===t;})||{};
+    var barW=Math.round((scores[t]/4)*100);
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><b style="width:22px;font-size:13px">'+esc(t)+'</b><span style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+barW+'%;background:var(--primary);border-radius:4px;transition:width .3s"></div></span><span style="color:var(--primary);font-weight:600;font-size:13px;width:28px;text-align:right">'+scores[t]+'</span></div>';
+  });
+  h+='</div>';
+  // Type details
+  h+='<div style="text-align:left;margin-top:20px"><div class="section-title" style="font-size:14px">各类型详解</div>';
+  (allTypes||[]).forEach(function(t){
+    if(!t.score)return;
+    var pct=Math.round((t.score/4)*100);
+    h+='<div class="card" style="padding:16px;margin-bottom:10px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><b style="color:var(--primary);font-size:16px">'+esc(t.type)+'</b><b style="font-size:15px">'+esc(t.name)+'</b><span style="margin-left:auto;font-size:12px;color:var(--text-secondary)">匹配度 '+pct+'%</span></div><div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">关键词：'+esc(t.keyword||'')+'</div><div style="font-size:13px;line-height:1.6;color:var(--text)">'+esc(t.description||'')+'</div>';
+    if(t.careers&&t.careers.length)h+='<div style="margin-top:8px"><span style="font-size:12px;color:var(--text-secondary)">典型职业：</span><span style="font-size:13px">'+esc(t.careers.join('、'))+'</span></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  // Matched roles
+  if(matchedRoles.length){
+    h+='<div style="text-align:left;margin-top:16px"><div class="section-title" style="font-size:14px">推荐岗位（基于你的Top2类型组合）</div>';
+    h+='<div class="card" style="padding:14px"><div style="display:flex;flex-wrap:wrap;gap:8px">';
+    matchedRoles.forEach(function(r){h+='<span style="padding:8px 16px;background:var(--sidebar-active);color:var(--primary);border-radius:20px;font-size:13px;font-weight:500">'+esc(r)+'</span>';});
+    h+='</div></div></div>';
+  }
+  // Legend
+  h+='<div style="font-size:11px;color:var(--text-secondary);margin-top:16px;line-height:1.8">R=实际型 | I=研究型 | A=艺术型 | S=社会型 | E=企业型 | C=常规型</div>';
+  // Disclaimer
+  h+='<div class="card" style="padding:14px;margin-top:12px;background:var(--sidebar-hover)"><div style="font-size:12px;color:var(--text-secondary);line-height:1.6">这只是基于12道题的初步参考，不是对你的定义。真实的你远比测评结果更丰富。</div></div>';
+  h+='<button class="btn-primary" style="margin-top:12px" onclick="navTo(\'chat\')">💬 和AI聊聊你的结果</button></div>';
+  document.getElementById('hollandBody').innerHTML=h;
+  setTimeout(drawHollandRadar,100);
+}
+
+function generateInterpretation(topTypes,allTypes){
+  if(!topTypes||topTypes.length<2)return '测评结果收集中...';
+  var t1=topTypes[0],t2=topTypes[1];
+  var clarity='';
+  // Style-based interpretation
+  if(t1.type==='I'&&t2.type==='A')clarity='你既有研究型的逻辑分析能力，又有艺术型的创造表达欲望。你适合需要「深度思考+创意输出」的工作，比如产品设计、数据可视化、游戏策划。';
+  else if(t1.type==='I'&&t2.type==='S')clarity='你兼具研究型的分析力和社会型的助人特质。教育科技、用户研究、医疗健康这类「用技术帮助人」的领域很适合你。';
+  else if(t1.type==='I'&&t2.type==='E')clarity='你有研究型的技术底蕴和企业型的领导魄力。技术管理、创业、产品策略这类「技术+商业」结合的岗位是你的舞台。';
+  else if(t1.type==='I'&&t2.type==='C')clarity='研究型的探索精神加上常规型的严谨规范，让你成为典型的数据驱动型人才。数据分析、精算、风控等领域能让你如鱼得水。';
+  else if(t1.type==='I'&&t2.type==='R')clarity='研究型+实际型的组合非常适合工程类岗位。你既喜欢动脑分析问题，又享受动手解决实际问题。';
+  else if(t1.type==='S'&&t2.type==='E')clarity='社会型的助人精神加上企业型的领导力，让你天生适合管理角色。HR、项目管理、教育管理都是能发挥你特长的方向。';
+  else if(t1.type==='S'&&t2.type==='A')clarity='你既有社会型的共情力，又有艺术型的创造力。UX设计、内容策划、艺术教育等需要「理解人+创造美」的岗位非常适合你。';
+  else if(t1.type==='A'&&t2.type==='E')clarity='艺术型的创意加上企业型的胆识，你是天生的产品人和创业者。产品经理、品牌策划、创业都是你的主场。';
+  else if(t1.type==='E'&&t2.type==='C')clarity='企业型的战略眼光加上常规型的严谨执行，让你在商业领域有独特优势。管理咨询、投行、法律都是不错的选择。';
+  else if(t1.type==='R'&&t2.type==='E')clarity='实际型的动手能力加上企业型的领导力，工程管理、技术销售、制造业管理能让你大展身手。';
+  else if(t1.type==='R'&&t2.type==='C')clarity='实际型+常规型的组合让你成为可靠的技术专家。质量控制、设备管理、安全工程等需要「动手+严谨」的岗位很适合你。';
+  else clarity='你的'+t1.name+'('+t1.type+')和'+t2.name+'('+t2.type+')组合形成了一个独特的职业画像。建议你多尝试不同类型的实习，在实践中感受哪个方向最让你有成就感。';
+  return clarity;
+}
+function drawHollandRadar(){
+  var c=document.getElementById('hollandCanvas');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var cx=140,cy=140,r=110;
+  var types=['R','I','A','S','E','C'];
+  var maxScore=Math.max.apply(null,types.map(function(t){
+    return hollandAnswers.filter(function(x){return x===t;}).length;
+  }))||1;
+  ctx.clearRect(0,0,280,280);
+  for(var i=1;i<=4;i++){ctx.beginPath();for(var j=0;j<6;j++){var a=Math.PI/2-j*Math.PI/3;var x=cx+(r*i/4)*Math.cos(a);var y=cy-(r*i/4)*Math.sin(a);if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();ctx.strokeStyle='#E2E8F0';ctx.stroke();}
+  for(var k=0;k<6;k++){var a2=Math.PI/2-k*Math.PI/3;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a2),cy-r*Math.sin(a2));ctx.stroke();}
+  ctx.beginPath();
+  for(var m=0;m<6;m++){
+    var a3=Math.PI/2-m*Math.PI/3;
+    var v=(hollandAnswers.filter(function(x){return x===types[m];}).length/maxScore)*r;
+    var px=cx+v*Math.cos(a3),py=cy-v*Math.sin(a3);
+    if(m===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+  }
+  ctx.closePath();ctx.fillStyle='rgba(249,115,22,0.3)';ctx.fill();ctx.strokeStyle='#F97316';ctx.lineWidth=2;ctx.stroke();
+  for(var n=0;n<6;n++){
+    var a4=Math.PI/2-n*Math.PI/3;
+    ctx.fillStyle='#1E293B';ctx.font='bold 14px sans-serif';
+    ctx.fillText(types[n],cx+(r+20)*Math.cos(a4)-8,cy-(r+20)*Math.sin(a4)+5);
+  }
+}
+
+// ========== RADAR ==========
+async function loadRadar(){
+  try{
+    var d=await api('/api/radar/view/'+userId);
+    if(d&&d.dimensions)renderRadar(d);
+    else document.getElementById('radarBody').innerHTML='<div class="empty-state"><div class="es-icon">📊</div><div class="es-text">还没有雷达图数据</div><button class="btn-primary" style="margin-top:16px;max-width:200px" onclick="generateRadar()">生成雷达图</button></div>';
+  }catch(e){document.getElementById('radarBody').innerHTML='<div class="empty-state"><div class="es-text">加载失败</div></div>';}
+}
+async function generateRadar(){
+  document.getElementById('radarBody').innerHTML='<div class="loading">生成中...</div>';
+  try{var d=await api('/api/radar/generate','POST',{user_id:userId});renderRadar(d);}catch(e){document.getElementById('radarBody').innerHTML='<div class="empty-state"><div class="es-text">生成失败</div></div>';}
+}
+function renderRadar(data){
+  var dims=data.dimensions||[];
+  var depth=data.conversation_depth||1;
+  var h='<div class="depth-steps">';
+  var names=['连接','了解','挖掘','分析','行动'];
+  for(var i=0;i<5;i++)h+='<div class="ds'+(i<depth?' active':'')+'">'+names[i]+'</div>';
+  h+='</div>';
+  if(dims.length)h+='<div class="card" style="text-align:center"><canvas id="radarCanvas" width="320" height="320"></canvas></div>';
+  document.getElementById('radarBody').innerHTML=h+'<button class="btn-primary" style="margin-top:12px" onclick="generateRadar()">刷新雷达图</button>';
+  if(dims.length)setTimeout(drawRadarCanvas,100);
+}
+function drawRadarCanvas(){
+  var c=document.getElementById('radarCanvas');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var dims=['专业能力','沟通表达','团队协作','学习能力','执行力','创造力','逻辑思维','抗压能力'];
+  var cx=160,cy=160,r=130;
+  ctx.clearRect(0,0,320,320);
+  for(var i=1;i<=4;i++){ctx.beginPath();for(var j=0;j<dims.length;j++){var a=Math.PI/2-j*2*Math.PI/dims.length;var x=cx+(r*i/4)*Math.cos(a);var y=cy-(r*i/4)*Math.sin(a);if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();ctx.strokeStyle='#E2E8F0';ctx.stroke();}
+  for(var k=0;k<dims.length;k++){var a2=Math.PI/2-k*2*Math.PI/dims.length;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a2),cy-r*Math.sin(a2));ctx.stroke();}
+  ctx.beginPath();
+  for(var m=0;m<dims.length;m++){
+    var a3=Math.PI/2-m*2*Math.PI/dims.length;
+    var v=((m+1)*0.12+0.3)*r;
+    var px=cx+v*Math.cos(a3),py=cy-v*Math.sin(a3);
+    if(m===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+  }
+  ctx.closePath();ctx.fillStyle='rgba(249,115,22,0.3)';ctx.fill();ctx.strokeStyle='#F97316';ctx.lineWidth=2;ctx.stroke();
+  for(var n=0;n<dims.length;n++){
+    var a4=Math.PI/2-n*2*Math.PI/dims.length;
+    ctx.fillStyle='#1E293B';ctx.font='11px sans-serif';
+    ctx.fillText(dims[n],cx+(r+18)*Math.cos(a4)-dims[n].length*3,cy-(r+18)*Math.sin(a4)+4);
+  }
+}
+
+// ========== ROADMAP ==========
+async function loadRoadmap(){
+  try{
+    var d=await api('/api/roadmap/view/'+userId);
+    if(d&&d.stages)renderRoadmapView(d);else renderRoadmapCreate();
+  }catch(e){renderRoadmapCreate();}
+}
+async function renderRoadmapCreate(){
+  try{
+    var ts=await api('/api/roadmap/templates');
+    if(!Array.isArray(ts))ts=[];
+    var h='<div class="card"><div class="section-title">选择发展模板</div><div class="template-grid">';
+    ts.forEach(function(t){h+='<div class="template-card'+(selectedTemplate===t.id?' sel':'')+'" onclick="selectRoadmapTemplate(\''+t.id+'\')"><div class="tc-name">'+esc(t.name||t.id)+'</div><div class="tc-stages">'+(t.stages||0)+' 个阶段</div></div>';});
+    h+='</div><button class="btn-primary" onclick="createRoadmap()">生成发展路径</button></div>';
+    if(!ts.length)h+='<div class="es-text" style="margin-top:12px">暂无可用模板，请先完成个人定位</div>';
+    document.getElementById('roadmapBody').innerHTML=h;
+  }catch(e){document.getElementById('roadmapBody').innerHTML='<div class="empty-state"><div class="es-icon">🗺️</div><div class="es-text">模板加载失败</div><div class="es-text2">请确保已完成个人定位</div></div>';}
+}
+function selectRoadmapTemplate(id){selectedTemplate=id;renderRoadmapCreate();}
+async function createRoadmap(){
+  if(!selectedTemplate)return alert('请选择一个模板');
+  document.getElementById('roadmapBody').innerHTML='<div class="loading">生成中...</div>';
+  try{var d=await api('/api/roadmap/create','POST',{user_id:userId,template_id:selectedTemplate});renderRoadmapView(d);}catch(e){document.getElementById('roadmapBody').innerHTML='<div class="empty-state"><div class="es-text">生成失败</div></div>';}
+}
+function renderRoadmapView(data){
+  var stages=data.stages||[];
+  var h='';
+  stages.forEach(function(s){
+    h+='<div class="stage-card"><div class="sc-header" onclick="toggleStage(this)"><div class="sc-name">'+esc(s.name)+'</div><div class="sc-badge '+(s.status||'pending')+'">'+(s.status==='completed'?'已完成':'进行中')+'</div></div>';
+    if(s.milestones&&s.milestones.length){
+      h+='<div class="sc-milestones">';
+      s.milestones.forEach(function(m){
+        h+='<div class="sc-ms-item" onclick="toggleRoadmapMs(\''+m.id+'\',\''+(m.status||'pending')+'\')"><div class="sc-ms-check'+(m.status==='completed'?' done':'')+'">'+(m.status==='completed'?'&#10003;':'')+'</div><span>'+(m.status==='completed'?'<s>'+esc(m.name)+'</s>':esc(m.name))+'</span></div>';
+      });
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  if(!h)h='<div class="empty-state"><div class="es-icon">🗺️</div><div class="es-text">尚未生成发展路径</div><div class="es-text2">完成个人定位后，AI将为你定制从基础到冲刺的成长路线</div><button class="btn-primary" style="max-width:240px;margin:16px auto" onclick="navTo(\'onboarding\')">去定位</button></div>';
+  document.getElementById('roadmapBody').innerHTML=h;
+}
+function toggleStage(el){
+  var ms=el.parentElement.querySelector('.sc-milestones');
+  if(ms)ms.style.display=ms.style.display==='none'?'block':'none';
+}
+async function toggleRoadmapMs(id,status){
+  var ns=status==='completed'?'pending':'completed';
+  try{await api('/api/roadmap/milestone/update','POST',{user_id:userId,milestone_id:id,status:ns});loadRoadmap();}catch(e){}
+}
+
+// ========== MILESTONES ==========
+async function loadMilestones(){
+  try{
+    var d=await api('/api/milestones/list/'+userId);
+    milestones=d||[];renderMilestones();
+  }catch(e){}
+}
+function renderMilestones(){
+  var grid=document.getElementById('milestoneGrid');
+  var done=milestones.filter(function(m){return m.status==='completed';}).length;
+  document.getElementById('msProgress').textContent=done+'/'+milestones.length;
+  document.getElementById('msProgressBar').style.width=milestones.length?(done/milestones.length*100)+'%':'0%';
+  document.getElementById('statMs').textContent=done;
+  document.getElementById('statMsBar').style.width=milestones.length?(done/milestones.length*100)+'%':'0%';
+  if(!milestones.length){grid.innerHTML='<div class="empty-state"><div class="es-icon">📝</div><div class="es-text">还没有里程碑，在下方添加吧</div></div>';return;}
+  grid.innerHTML=milestones.map(function(m){
+    return '<div class="ms-card'+(m.status==='completed'?' done':'')+'"><div class="ms-check'+(m.status==='completed'?' done':'')+'" onclick="toggleMs('+m.id+',\''+(m.status||'pending')+'\')">'+(m.status==='completed'?'&#10003;':'')+'</div><div class="ms-text'+(m.status==='completed'?' done':'')+'">'+esc(m.name)+'</div><div class="ms-del" onclick="deleteMs('+m.id+')">&times;</div></div>';
+  }).join('');
+}
+async function addMilestone(){
+  var n=document.getElementById('msInput').value.trim();
+  if(!n)return;
+  try{await api('/api/milestones/create','POST',{user_id:userId,name:n});document.getElementById('msInput').value='';loadMilestones();}catch(e){}
+}
+async function toggleMs(id,status){
+  var ns=status==='completed'?'pending':'completed';
+  try{await api('/api/milestones/update','POST',{user_id:userId,milestone_id:id,status:ns});loadMilestones();}catch(e){}
+}
+async function deleteMs(id){
+  if(!confirm('确认删除？'))return;
+  try{await api('/api/milestones/delete','POST',{user_id:userId,milestone_id:id});loadMilestones();}catch(e){}
+}
+
+// ========== NARRATIVE ==========
+async function doStoryMining(){
+  var t=document.getElementById('storyText').value.trim();
+  // Handle file upload
+  var fileText=await uploadFileAndGetText('storyFile');
+  if(fileText)t=(t?t+'\n\n':'')+'[文件内容]\n'+fileText;
+  if(!t)return;
+  document.getElementById('storyMiningResult').innerHTML='<div class="loading">挖掘中...</div>';
+  try{
+    var d=await api('/api/chat/narrative','POST',{user_id:userId,raw_text:t});
+    if(d.stories&&d.stories.length){
+      narrativeStories=d.stories;
+      var h='<div class="section-title" style="margin-top:12px">挖掘到的故事</div>';
+      narrativeStories.forEach(function(s,i){
+        h+='<div class="card" style="cursor:pointer;border:2px solid '+(selectedStoryIdx===i?'var(--primary)':'var(--border)')+'" onclick="selectStory('+i+')"><div style="font-weight:700;margin-bottom:4px">'+esc(s.title||'故事'+(i+1))+'</div><div style="font-size:13px;color:var(--text-secondary)">'+esc(s.summary||'')+'</div></div>';
+      });
+      if(narrativeStories.length)h+='<button class="btn-primary" style="margin-top:12px" onclick="doStarDecomposition()">STAR 拆解选中故事</button>';
+      document.getElementById('storyMiningResult').innerHTML=h;
+    }else{document.getElementById('storyMiningResult').innerHTML='<div class="es-text">未找到故事，试试更详细的描述</div>';}
+  }catch(e){document.getElementById('storyMiningResult').innerHTML='<div class="es-text">挖掘失败</div>';}
+}
+function selectStory(i){selectedStoryIdx=i;doStoryMining();}
+async function doStarDecomposition(){
+  if(selectedStoryIdx<0||!narrativeStories[selectedStoryIdx])return;
+  var s=narrativeStories[selectedStoryIdx];
+  document.getElementById('starArea').innerHTML='<div class="loading" id="starLoading">拆解中...</div>';
+  try{
+    var d=await api('/api/chat/star','POST',{user_id:userId,story:s.summary||s.title});
+    var h='<div class="card" style="margin-top:12px"><div class="section-title">STAR 拆解结果</div>';
+    if(d.situation)h+='<div style="margin-bottom:8px"><b>S - 情境：</b>'+esc(d.situation)+'</div>';
+    if(d.task)h+='<div style="margin-bottom:8px"><b>T - 任务：</b>'+esc(d.task)+'</div>';
+    if(d.action)h+='<div style="margin-bottom:8px"><b>A - 行动：</b>'+esc(d.action)+'</div>';
+    if(d.result)h+='<div style="margin-bottom:8px"><b>R - 结果：</b>'+esc(d.result)+'</div>';
+    h+='</div>';
+    document.getElementById('starArea').innerHTML=h;
+  }catch(e){document.getElementById('starArea').innerHTML='<div class="es-text">拆解失败</div>';}
+}
+
+// ========== RESUME ==========
+async function optimizeResume(){
+  var t=document.getElementById('resumeText').value.trim();
+  // Handle file upload
+  var fileText=await uploadFileAndGetText('resumeFile');
+  if(fileText)t=(t?t+'\n\n':'')+'[文件内容]\n'+fileText;
+  if(!t)return;
+  document.getElementById('resumeResult').innerHTML='<div class="loading">优化中...</div>';
+  try{
+    var d=await api('/api/chat/resume/rewrite','POST',{user_id:userId,resume_text:t});
+    document.getElementById('resumeResult').innerHTML='<div class="card"><div class="section-title">优化结果</div><div style="line-height:1.8;white-space:pre-wrap">'+esc(d.optimized||d.message||'')+'</div></div>';
+  }catch(e){document.getElementById('resumeResult').innerHTML='<div class="es-text">优化失败</div>';}
+}
+
+// ========== INTERVIEW ==========
+async function doInterviewPrep(){
+  var target=document.getElementById('intTarget').value.trim();
+  var resume=document.getElementById('intResume').value.trim();
+  var jd=document.getElementById('intJd').value.trim();
+  if(!target)return;
+  
+  // Handle file uploads
+  var resumeFile=await uploadFileAndGetText('intResumeFile');
+  if(resumeFile)resume=(resume?resume+'\n\n':'')+'[简历文件]\n'+resumeFile;
+  var jdFile=await uploadFileAndGetText('intJdFile');
+  if(jdFile)jd=(jd?jd+'\n\n':'')+'[JD文件]\n'+jdFile;
+  
+  var bg=[];
+  if(resume)bg.push('简历：\n'+resume);
+  if(jd)bg.push('JD：\n'+jd);
+  
+  document.getElementById('intResult').innerHTML='<div class="loading">生成中...</div>';
+  try{
+    var d=await api('/api/chat/interview/kit','POST',{user_id:userId,target_role:target,background:bg.join('\n\n')});
+    document.getElementById('intResult').innerHTML='<div class="card"><div class="section-title">面试准备包</div><div style="line-height:1.8;white-space:pre-wrap">'+esc(d.kit||d.questions||d.message||'')+'</div></div>';
+  }catch(e){document.getElementById('intResult').innerHTML='<div class="es-text">生成失败</div>';}
+}
+
+// ========== ANXIETY ==========
+async function sendAnxiety(){
+  var t=document.getElementById('anxietyText').value.trim();
+  if(!t)return;
+  document.getElementById('comfortResult').innerHTML='<div class="loading">倾听中...</div>';
+  try{
+    var d=await api('/api/anxiety/trigger','POST',{user_id:userId,emotion_text:t});
+    document.getElementById('anxietyText').value='';
+    document.getElementById('comfortResult').innerHTML='<div class="comfort-card">'+esc(d.response||d.message||'')+'</div>';
+  }catch(e){document.getElementById('comfortResult').innerHTML='<div class="comfort-card">发送失败，请重试</div>';}
+}
+
+// ========== CHAT ==========
+async function sendMessage(){
+  var input=document.getElementById('msgInput');
+  var text=input.value.trim();
+  
+  // Handle file upload
+  var fileText='';
+  if(chatFileData){
+    var formData=new FormData();
+    formData.append('file',chatFileData);
+    formData.append('user_id',userId);
+    try{
+      addMessage('user','📎 上传文件: '+chatFileData.name);
+      var fr=await fetch(API_BASE+'/api/chat/resume/upload',{method:'POST',body:formData});
+      var fd=await fr.json();
+      fileText=fd.extracted_text||fd.content||'';
+      if(fileText)text=(text?text+'\n\n':'')+'[文件内容]\n'+fileText;
+    }catch(e){}
+    clearChatFile();
+  }
+  
+  if(!text)return;
+  input.value='';
+  document.getElementById('sendBtn').disabled=true;
+  var wb=document.getElementById('welcomeBox');
+  if(wb)wb.style.display='none';
+  addMessage('user',text);
+  messages.push({role:'user',content:text});
+  var botId='bot_'+Date.now();
+  addMessage('assistant','',botId);
+  try{
+    var r=await fetch(API_BASE+'/api/chat/stream',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:userId,message:text,history_limit:10})
+    });
+    var reader=r.body.getReader();
+    var dec=new TextDecoder();
+    var buf='',fc='';
+    while(true){
+      var result=await reader.read();
+      if(result.done)break;
+      buf+=dec.decode(result.value,{stream:true});
+      var lines=buf.split('\n\n');
+      buf=lines.pop()||'';
+      for(var i=0;i<lines.length;i++){
+        var l=lines[i];
+        if(l.startsWith('data: ')){
+          try{
+            var d=JSON.parse(l.slice(6));
+            if(d.done){updateBotMsg(botId,fc,false);}
+            else if(d.content){fc+=d.content;updateBotMsg(botId,fc,true);}
+          }catch(e2){}
+        }
+      }
+    }
+  }catch(e){updateBotMsg(botId,'网络错误，请稍后重试',false);}
+  document.getElementById('sendBtn').disabled=false;
+  scrollChatBottom();
+}
+function sendQuick(text){document.getElementById('msgInput').value=text;sendMessage();}
+function addMessage(role,content,id){
+  var c=document.getElementById('chatMessages');
+  var cls=role==='user'?'user':'bot';
+  var avatar=role==='user'?'🧑‍🎓':'🤖';
+  var msgId=id||'msg_'+Date.now();
+  c.innerHTML+='<div class="msg-row '+cls+'" id="'+msgId+'"><div class="msg-avatar">'+avatar+'</div><div class="msg-bubble">'+esc(content)+'<span class="typing-cursor" id="cursor_'+msgId+'"></span></div></div>';
+  scrollChatBottom();
+}
+function updateBotMsg(id,content,typing){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.querySelector('.msg-bubble').innerHTML=esc(content)+(typing?'<span class="typing-cursor">|</span>':'');
+  scrollChatBottom();
+}
+function scrollChatBottom(){
+  var c=document.getElementById('chatMessages');
+  c.scrollTop=c.scrollHeight;
+}
+async function clearChat(){
+  if(!confirm('确认清空对话？'))return;
+  try{await fetch(API_BASE+'/api/chat/history/'+userId,{method:'DELETE'});}catch(e){}
+  messages=[];
+  document.getElementById('chatMessages').innerHTML='<div class="welcome-center" id="welcomeBox"><div class="wc-emoji">💬</div><div class="wc-title">把经历扔给我，帮你写成简历</div><div class="wc-desc">告诉我你做过什么项目、实习、比赛，我来帮你整理、拆解、转成 STAR 语言。</div><div class="quick-chips"><span class="quick-chip" onclick="sendQuick(\'帮我整理经历\')">直接扔经历给我</span><span class="quick-chip" onclick="sendQuick(\'帮我拆解实习经历\')">拆解实习经历</span><span class="quick-chip" onclick="sendQuick(\'看看匹配度\')">看看匹配度</span></div></div>';
+}
+
+// ========== PROFILE ==========
+async function loadProfilePage(){
+  try{
+    var d=await api('/api/user/profile/'+userId);
+    var p=d.profile||{};
+    var avatar=d.avatar_url||'';
+    var nickname=d.nickname||'';
+    var statusMap={studying:'在校学习中',internship:'正在实习',job_hunting:'正在求职',preparing_exam:'备考中',gap:'Gap/间隔年',offer_deciding:'已有Offer选择中'};
+    var clarityMap={very_clear:'非常清晰',somewhat_clear:'大概有方向',exploring:'正在探索',unclear:'需要引导'};
+    // Avatar and nickname section
+    var h='<div class="card" style="text-align:center"><div style="font-size:64px;margin-bottom:12px" id="profileAvatar">'+(avatar?'<img src="'+esc(avatar)+'" style="width:64px;height:64px;border-radius:50%;object-fit:cover">':'🧑‍🎓')+'</div>';
+    h+='<div class="section-title" id="profileNickname" style="font-size:18px">'+esc(nickname||'同学')+'</div>';
+    h+='<div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">'+esc(d.current_stage||'未定位')+'</div>';
+    h+='<button class="btn-sm" onclick="editNickname()" style="margin-right:8px">编辑昵称</button>';
+    h+='<button class="btn-outline" onclick="editAvatar()">更换头像</button>';
+    h+='</div>';
+    // Info section
+    h+='<div class="card"><div class="section-title">基本信息</div>';
+    h+='<div style="line-height:2.2"><b>当前阶段：</b>'+esc(d.current_stage||'未定位')+'</div>';
+    h+='<div style="line-height:2.2"><b>专业大类：</b>'+esc(p.major_category_name||p.major_category||'未填写')+'</div>';
+    h+='<div style="line-height:2.2"><b>学历类型：</b>'+esc(p.education_type_name||p.education_type||'未填写')+'</div>';
+    h+='<div style="line-height:2.2"><b>年级：</b>'+esc(p.grade_name||p.grade||'未填写')+'</div>';
+    if(p.graduation_year)h+='<div style="line-height:2.2"><b>入学年份：</b>'+p.graduation_year+'年</div>';
+    if(p.career_clarity)h+='<div style="line-height:2.2"><b>方向清晰度：</b>'+esc(clarityMap[p.career_clarity]||p.career_clarity)+'</div>';
+    if(p.current_status)h+='<div style="line-height:2.2"><b>当前状态：</b>'+esc(statusMap[p.current_status]||p.current_status)+'</div>';
+    if(p.target_industries&&p.target_industries.length)h+='<div style="line-height:2.2"><b>目标行业：</b>'+esc(p.target_industries.join('、'))+'</div>';
+    h+='</div><button class="btn-primary" onclick="navTo(\'onboarding\')">重新定位</button>';
+    document.getElementById('profileBody').innerHTML=h;
+  }catch(e){document.getElementById('profileBody').innerHTML='<div class="empty-state"><div class="es-text">加载失败</div></div>';}
+}
+
+async function editNickname(){
+  var newName=prompt('请输入新昵称：');
+  if(!newName||!newName.trim())return;
+  try{
+    await api('/api/user/update-profile','POST',{user_id:userId,nickname:newName.trim()});
+    loadProfilePage();
+  }catch(e){alert('更新失败');}
+}
+
+function editAvatar(){
+  var url=prompt('请输入头像图片URL：');
+  if(!url||!url.trim())return;
+  api('/api/user/update-profile','POST',{user_id:userId,avatar_url:url.trim()}).then(function(){
+    loadProfilePage();
+  }).catch(function(){alert('更新失败');});
+}
+
+// ========== CIRCLE ==========
+function submitCircleQuestion(){
+  var q=document.getElementById('circleQuestion');
+  if(!q||!q.value.trim())return;
+  alert('提问已提交！（社区功能即将上线）');
+  q.value='';
+}
+
+// ========== CALENDAR ==========
+var EVENT_ICONS={
+  '面试':{icon:'🎙️',bg:'#FEE2E2'},
+  '笔试':{icon:'📝',bg:'#DBEAFE'},
+  '宣讲会':{icon:'📢',bg:'#FEF3C7'},
+  '投递截止':{icon:'⏰',bg:'#FCE7F3'},
+  'Offer':{icon:'🎉',bg:'#DCFCE7'},
+  '其他':{icon:'📌',bg:'#F1F5F9'}
+};
+
+function selectEventType(type,el){
+  selectedEventType=type;
+  var items=document.querySelectorAll('#eventTypeSelect .ets-item');
+  for(var i=0;i<items.length;i++)items[i].classList.remove('sel');
+  el.classList.add('sel');
+}
+
+function renderCalendar(){
+  var today=new Date();
+  var grid=document.getElementById('calGrid');
+  document.getElementById('calTitle').textContent=calYear+'年'+(calMonth+1)+'月';
+  var firstDay=new Date(calYear,calMonth,1).getDay();
+  var daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  var prevDays=new Date(calYear,calMonth,0).getDate();
+  var html='';
+  for(var i=firstDay-1;i>=0;i--)html+='<div class="cal-day other">'+(prevDays-i)+'</div>';
+  for(var d=1;d<=daysInMonth;d++){
+    var ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var cls=[];
+    var isToday=calYear===today.getFullYear()&&calMonth===today.getMonth()&&d===today.getDate();
+    if(isToday)cls.push('today');
+    if(events[ds]&&events[ds].length)cls.push('has-event');
+    if(calSelected===ds)cls.push('selected');
+    html+='<div class="cal-day '+cls.join(' ')+'" onclick="selectDate(\''+ds+'\')">'+d+'</div>';
+  }
+  var remaining=7-((firstDay+daysInMonth)%7);
+  if(remaining<7)for(var d2=1;d2<=remaining;d2++)html+='<div class="cal-day other">'+d2+'</div>';
+  grid.innerHTML=html;
+  renderTodayEvents();
+}
+function changeMonth(delta){
+  calMonth+=delta;
+  if(calMonth<0){calMonth=11;calYear--;}
+  if(calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+function selectDate(ds){
+  calSelected=ds;
+  document.getElementById('eventDate').value=ds;
+  renderCalendar();
+  renderDateEvents(ds);
+}
+function renderTodayEvents(){
+  var today=new Date();
+  var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  var evts=events[ds]||[];
+  var c=document.getElementById('todayEvents');
+  if(!evts.length){c.innerHTML='<div class="rp-list-item"><div class="rpli-icon" style="background:#F1F5F9">📅</div><div class="rpli-info"><div class="rpli-title">暂无日程</div></div></div>';return;}
+  c.innerHTML=evts.map(function(e,i){
+    var ei=EVENT_ICONS[e.type]||EVENT_ICONS['其他'];
+    return '<div class="rp-list-item" style="cursor:pointer" onclick="editEvent(\''+ds+'\','+i+')"><div class="rpli-icon" style="background:'+ei.bg+'">'+ei.icon+'</div><div class="rpli-info"><div class="rpli-title">'+esc(e.title)+'</div><div class="rpli-sub">'+(e.type||'日程')+'</div></div></div>';
+  }).join('');
+}
+function renderDateEvents(ds){
+  var evts=events[ds]||[];
+  var c=document.getElementById('todayEvents');
+  if(!evts.length){c.innerHTML='<div class="rp-list-item"><div class="rpli-icon" style="background:#F1F5F9">📅</div><div class="rpli-info"><div class="rpli-title">'+ds+' 暂无日程</div></div></div>';return;}
+  c.innerHTML=evts.map(function(e,i){
+    var ei=EVENT_ICONS[e.type]||EVENT_ICONS['其他'];
+    return '<div class="rp-list-item" style="cursor:pointer" onclick="editEvent(\''+ds+'\','+i+')"><div class="rpli-icon" style="background:'+ei.bg+'">'+ei.icon+'</div><div class="rpli-info"><div class="rpli-title">'+esc(e.title)+'</div><div class="rpli-sub">'+(e.type||'日程')+'</div></div></div>';
+  }).join('');
+}
+function addEvent(){
+  editingDate=calSelected||(new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0')+'-'+String(new Date().getDate()).padStart(2,'0'));
+  editingIdx=null;
+  selectedEventType='面试';
+  document.getElementById('modalTitle').textContent='添加日程';
+  document.getElementById('eventDate').value=editingDate;
+  document.getElementById('eventTitle').value='';
+  document.getElementById('eventDesc').value='';
+  document.getElementById('btnDeleteEvent').style.display='none';
+  var items=document.querySelectorAll('#eventTypeSelect .ets-item');
+  for(var i=0;i<items.length;i++)items[i].classList.remove('sel');
+  items[0].classList.add('sel');
+  document.getElementById('eventModal').classList.add('show');
+}
+function editEvent(ds,idx){
+  editingDate=ds;editingIdx=idx;
+  var e=events[ds][idx];
+  selectedEventType=e.type||'其他';
+  document.getElementById('modalTitle').textContent='编辑日程';
+  document.getElementById('eventDate').value=ds;
+  document.getElementById('eventTitle').value=e.title;
+  document.getElementById('eventDesc').value=e.desc||'';
+  document.getElementById('btnDeleteEvent').style.display='inline-block';
+  var items=document.querySelectorAll('#eventTypeSelect .ets-item');
+  for(var i=0;i<items.length;i++)items[i].classList.remove('sel');
+  var selItem=document.querySelector('#eventTypeSelect [data-type="'+selectedEventType+'"]');
+  if(selItem)selItem.classList.add('sel');
+  document.getElementById('eventModal').classList.add('show');
+}
+function closeEventModal(){document.getElementById('eventModal').classList.remove('show');}
+function saveEvent(){
+  var ds=document.getElementById('eventDate').value;
+  var title=document.getElementById('eventTitle').value.trim();
+  if(!ds||!title)return;
+  if(!events[ds])events[ds]=[];
+  var evt={title:title,desc:document.getElementById('eventDesc').value.trim(),type:selectedEventType};
+  if(editingIdx!==null)events[ds][editingIdx]=evt;else events[ds].push(evt);
+  localStorage.setItem('stepone_events',JSON.stringify(events));
+  closeEventModal();renderCalendar();
+}
+function deleteEvent(){
+  if(editingDate&&editingIdx!==null){events[editingDate].splice(editingIdx,1);if(!events[editingDate].length)delete events[editingDate];localStorage.setItem('stepone_events',JSON.stringify(events));}
+  closeEventModal();renderCalendar();
+}
+
+// Init calendar
+var now=new Date();
+calYear=now.getFullYear();calMonth=now.getMonth();
+calSelected=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+renderCalendar();
+
+init();
+</script>
+</body>
+</html>
